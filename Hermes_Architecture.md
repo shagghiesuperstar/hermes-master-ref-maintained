@@ -1,7 +1,7 @@
 # Hermes Agent — Master Architecture Reference
 ## `Hermes_Architecture.md`
 ### Version sourced from: NousResearch/hermes-agent (GitHub) + https://hermes-agent.nousresearch.com/docs/
-### Compiled: 2026-06-14 | SSOT for offline agentic development
+### Compiled: 2026-06-14 | Updated: 2026-06-21 | SSOT for offline agentic development
 
 ---
 
@@ -258,6 +258,8 @@ compression:
   threshold: 0.50                      # Fraction of context window (default 50%)
   target_ratio: 0.20                   # Tail protection token budget ratio
   protect_last_n: 20                   # Min messages always preserved in tail
+  hygiene_hard_message_limit: 5000     # Gateway session-hygiene force-compress threshold by message count (was 400, raised 2026-06-21)
+  in_place: false                      # When true, compaction rewrites message list WITHOUT rotating session id (no parent chain); eliminates session-rotation bug cluster (#33618, #14238, etc). Default False during rollout.
   codex_gpt55_autoraise: true          # Raise trigger to 85% for gpt-5.5 on Codex OAuth
 
 # ─── Prompt Caching (Anthropic) ─────────────────────────────────────
@@ -270,6 +272,7 @@ auxiliary:
     model: null                        # null = auto-detect from main model
     provider: auto                     # "auto" | "openrouter" | "nous" | "main" | etc.
     base_url: null
+    language: ""                       # Language hint for compression summaries
   vision:
     model: null
     provider: auto
@@ -307,6 +310,9 @@ skills:
   config:                              # Per-skill config values (populated by hermes config migrate)
     myplugin:
       path: ~/my-data
+
+# ─── MCP Discovery Timeout ──────────────────────────────────────────
+mcp_discovery_timeout: 1.5             # Seconds to wait at agent-build time for in-flight MCP server discovery to finish before tool list snapshot. Was implicit 0.75s; bumped to 1.5 on 2026-06-21. Servers that miss this window are still picked up on next turn by between-turns refresh.
 
 # ─── MCP Servers ─────────────────────────────────────────────────────
 mcp_servers:
@@ -933,6 +939,29 @@ Approval flow:
 4. Smart approval: auxiliary LLM can auto-approve low-risk pattern matches
 5. Session state: approved patterns cached per-session
 6. Permanent allowlist: written to `config.yaml` `command_allowlist`
+
+## Tool-Output Budget Scaling (added 2026-06-21)
+
+Source: `tools/budget_config.py`, `agent/tool_executor.py`
+
+Tool-output truncation thresholds now scale to the model's context window (#23767):
+- `result_size`: per-tool result persistence threshold (default: 100K chars)
+- `turn_budget`: aggregate char budget across all tool results per turn (default: 200K chars)
+- `preview_size`: inline snippet size after persistence (default: 1,500 chars)
+
+When the model context window is small (e.g., 8K), budgets scale down proportionally to avoid overwhelming the context. The scaling is automatic — no config needed. `read_file` threshold is pinned at `inf` to prevent persist→read→persist loops.
+
+### Budget Resolution Priority
+1. `PINNED_THRESHOLDS` (e.g., `read_file: inf`) — never overridden
+2. `tool_overrides` in config — per-tool explicit values
+3. `registry.get_max_result_size()` — per-tool registry defaults
+4. `DEFAULT_RESULT_SIZE_CHARS` — fallback (100K chars)
+
+## Model Switch Preflight-Compress Warning (added 2026-06-21)
+
+Source: `hermes_cli/context_switch_guard.py`
+
+When an in-session `/model` switch would trigger preflight compression (because the new model has a smaller context window), the CLI and gateway now warn the user before proceeding. This prevents silent context loss. The warning is logged (not swallowed on error), and field semantics are consistent across CLI, TUI, and gateway surfaces.
 
 ---
 
@@ -1605,6 +1634,16 @@ auxiliary:
 | `target_ratio` | `0.20` | Tail token budget = threshold_tokens × target_ratio |
 | `protect_last_n` | `20` | Min messages preserved in tail |
 | `protect_first_n` | `3` (hardcoded) | System prompt + first exchange always preserved |
+| `hygiene_hard_message_limit` | `5000` | Gateway force-compress threshold by message count (raised from 400 on 2026-06-21) |
+| `in_place` | `false` | When true, compaction rewrites without session-id rotation; pre-compaction turns soft-archived (active=0, compacted=1), still searchable via session_search |
+
+### New Compression Behaviors (2026-06-21)
+
+1. **Auto-compression triggers at minimum context length** (#14690): compression no longer aborts when session is too short to compute a meaningful threshold; it triggers at the minimum viable context length instead.
+
+2. **Token calibration resets on model switch** (#23767): stale token-per-char calibration is reset when the model changes mid-session, preventing wrong compression decisions based on the previous model's tokenization.
+
+3. **Decay `protect_first_n`** (#11996): early turns no longer fossilize — `protect_first_n` decays as the session grows, allowing the LLM to summarize very early exchanges once they are old enough.
 
 ## Computed Values (200K context model, defaults)
 
@@ -1964,6 +2003,14 @@ IMPORTANT: Use **original** MCP tool names (with hyphens/dots) in `include`/`exc
 
 Utility tools (`list_resources`, `list_prompts`) only register if the MCP session actually exposes that capability. Setting `resources: true` when server doesn't support it is a no-op.
 
+## Ping Keepalive Fallback (added 2026-06-21)
+
+MCP servers that respond to ping/keepalive with "unknown method" phrasing are now handled gracefully — instead of failing the connection, the ping is silently treated as a no-op keepalive. This fixes false connection drops with servers that don't implement MCP ping but return error responses (#50028).
+
+## MCP Discovery Timeout (updated 2026-06-21)
+
+`mcp_discovery_timeout` config key (default: `1.5s`, was implicit `0.75s`) bounds the startup wait for in-flight MCP server discovery. Servers missing this window are still picked up on next turn by between-turns refresh — correctness never depends on this timer.
+
 ## OAuth 2.1
 
 ```yaml
@@ -2120,6 +2167,14 @@ auxiliary:
 
 When set to `main`, resolves through same shared runtime path as normal chat.
 
+## Credential Pool (updated 2026-06-21)
+
+Source: `agent/credential_pool.py`
+
+`load_pool()` is now **non-destructive** for env-seeded credentials. Previously, loading a credential pool could overwrite or clear credentials that were seeded from environment variables. Now env-seeded creds are preserved through pool loads, rotations, and exhaustion resets. This fixes a class of bugs where `hermes auth add` or pool rotation silently dropped API keys set via `.env`.
+
+Per-credential concurrency control: `DEFAULT_MAX_CONCURRENT_PER_CREDENTIAL` limits parallel API calls per credential to avoid rate-limit exhaustion.
+
 ## Fallback Model Config
 
 ```yaml
@@ -2242,6 +2297,15 @@ hermes gateway stop --all        # kills all gateway processes
 
 PID file: ~/.hermes/gateway.pid  # profile-scoped
 ```
+
+## Gateway Runtime Status (added 2026-06-21)
+
+`gateway/status.py` now tracks `active_agents` in runtime status on turn boundaries. The `/api/status` endpoint surfaces:
+- **busy**: whether the gateway has active agent runs
+- **drainable**: whether in-flight runs can be drained for restart
+- **active_agents**: count of currently running agents
+
+All `active_agents` coercion routes through `parse_active_agents()` for consistency. Drain-timeout resolution is deduped and shared across callers.
 
 ## Delivery Targets
 
@@ -2372,9 +2436,23 @@ hermes cron create                  # Interactive
 hermes cron edit <job_id>
 hermes cron pause <job_id>
 hermes cron resume <job_id>
-hermes cron run <job_id>            # Immediate execution
+hermes cron run <job_id>            # Immediate execution (on action='run')
 hermes cron remove <job_id>
 ```
+
+## Cron Improvements (2026-06-21)
+
+1. **Live-adapter delivery confirmation** (#38922, #47056, #43014): cron delivery now uses `DeliveryRouter` for reliable confirmation from live adapters (Telegram DM topics, etc.).
+
+2. **Immediate execution on `action='run'`** (#50025): `hermes cron run <id>` executes immediately without waiting for next tick.
+
+3. **Timezone offset repair** (#50034): migrated cron jobs with incorrect timezone offsets are repaired to prevent double-fire.
+
+4. **Model.default resolution** (#50018): cron scheduler resolves `model.default` at job time and fails fast if no model is configured.
+
+5. **Ticker alive on BaseException**: cron ticker survives `BaseException` (e.g., `KeyboardInterrupt`) and uses heartbeat-aware status reporting.
+
+6. **Telegram DM-topic routing**: cron delivery to Telegram DM topics routes through `DeliveryRouter` for proper topic handling.
 
 ---
 
@@ -2780,6 +2858,17 @@ GET  /health, /health/detailed
 
 Headers: `X-Hermes-Session-Id`, `X-Hermes-Session-Key`
 
+### Concurrent-Run Cap (DoS Protection, added 2026-06-21)
+
+```yaml
+# config.yaml
+platforms:
+  api_server:
+    max_concurrent_runs: 10   # Max parallel agent runs. Excess requests get HTTP 429 + Retry-After. Set 0 to disable.
+```
+
+`/v1/chat/completions`, `/v1/responses`, and `/v1/runs` are all rate-limited by this cap. Default: 10.
+
 ## Python In-Process Embed
 
 ```python
@@ -3035,9 +3124,17 @@ CLI flags (highest priority)
 | `compress_protect_first_n` | 3 | Hardcoded in `context_compressor.py` |
 | Summary ratio | 0.20 (`_SUMMARY_RATIO`) | `context_compressor.py` |
 | Min summary tokens | 2,000 | `context_compressor.py` |
-| Max summary tokens formula | `min(context_length × 0.05, 12,000)` | `context_compressor.py` |
-| Gateway hygiene threshold | 0.85 | `gateway/run.py` |
-| Tool result prune threshold | 200 chars | `context_compressor.py` |
+|| Max summary tokens formula | `min(context_length × 0.05, 12,000)` | `context_compressor.py` |
+|| Gateway hygiene threshold | 0.85 | `gateway/run.py` |
+|| Tool result prune threshold | 200 chars | `context_compressor.py` |
+|| `hygiene_hard_message_limit` | **5000** (was 400, updated 2026-06-21) | `compression` config |
+|| `mcp_discovery_timeout` | **1.5s** (was 0.75s, updated 2026-06-21) | config |
+|| `api_server.max_concurrent_runs` | 10 (added 2026-06-21) | `platforms.api_server` config |
+|| `DEFAULT_RESULT_SIZE_CHARS` | 100K | `tools/budget_config.py` |
+|| `DEFAULT_TURN_BUDGET_CHARS` | 200K | `tools/budget_config.py` |
+|| `DEFAULT_PREVIEW_SIZE_CHARS` | 1.5K | `tools/budget_config.py` |
+
+**Note**: `compress_protect_first_n` now decays as session grows (2026-06-21 update) — early turns no longer fossilize. Token calibration resets on model switch.
 
 ## SQLite Write Contention
 
