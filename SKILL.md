@@ -1,9 +1,9 @@
 ---
 name: hermes-architecture-reference
 description: Use when troubleshooting, designing, implementing, optimizing, maintaining, or reviewing Hermes Agent architecture, internals, config, tools, profiles, memory, MCP, gateway, cron, plugins, skills, provider routing, context compression, or security behavior. Treat official Hermes docs and the NousResearch/hermes-agent repo as authoritative sources; this skill is an offline architecture reference that must be kept in sync.
-version: 1.6.0
-last_drift_review: 2026-07-19
-repo_commit: cdcbc3a31 (last fully-synced anchor; upstream now 7b5ba2054, +716 commits pending; SSOT untouched per skill protocol)
+version: 1.7.0
+last_drift_review: 2026-07-26
+repo_commit: cdcbc3a31 (last fully-synced anchor; upstream now 65b73eb1e, +1790 commits pending; SSOT untouched per skill protocol)
 author: ss
 license: MIT
 metadata:
@@ -57,6 +57,7 @@ Use targeted reads/searches instead of loading the full file into the chat when 
 - `references/drift-review-runbook.md` — mechanical execution details for the weekly drift review: anchor probes, commit-type concentration command, feat-only inventory, canonical architecture area buckets (1:1 with Hermes_Architecture.md sections), spot-verification commands, frontmatter bump recipe, public-mirror sync.
 - `references/neo4j-graphiti-bolt-pool.md` — Neo4j 2026.05.0 (Homebrew) bolt pool tuning, Graphiti MCP keepalive / CancelledError root cause, verified config keys, and `brew services stop && start` recovery for launchctl bootstrap I/O error 5. Lessons from 2026-07-08 session where a third-party skill doc had the wrong config key.
 - `references/CHANGELOG-2026-07-19.md` — weekly drift review (502 commits since `aaeba213d`). Major additions: smart approvals now default (`approvals.mode: smart`), gpt-5.6 family (6 slugs, 272K compaction auto-raise), Fireworks AI as preferred provider, grok-4.5 GA, reasoning effort levels `max`/`ultra`, Hermes Cloud connection mode in desktop, OIDC client-credentials relay, webhook payload filters, PTY keep-alive/reattach/session-registry, Tencent Hy3 GA swap. **Read this before assuming any section of the main reference is current.**
+- `references/CHANGELOG-2026-07-26.md` — weekly drift review (1,074 commits since `7b5ba2054`). Major additions: **schema v22** (`session_model_usage` PK dimension + table rebuild for per-task auxiliary accounting), **`api_content` sidecar** for exact-prompt-cache replay (27.9s → 2.4-5.8s first-call TTFT fix), **durable delivery-obligation ledger** (gateway final-response loss fix), **per-session turn lease** (closes concurrent-turn alternation wedge), **profile-based routing for inbound messages** (Discord guilds/channels/threads → profiles), **`hermes config get`/`unset`**, **unknown top-level key warnings + `hermes doctor` deprecated-key/env reporting**, **per-model reasoning_effort overrides**, **per-task auxiliary reasoning_effort**, **MoA per-slot reasoning_effort**, **`/model --once` one-turn override**, **`/topup` + `/subscription` Nous plan UX**, **MCP exact version pins** + Blender catalog entry + Unreal MCP live-verify, **Upstage Solar** + **DeepInfra** providers, **unified 3-store credentials** (`.env` + `auth.json` + `config.yaml`), **Blender companion skill** + **MCP-OAuth-remote-gateway skill**, **computer-use verify → escalate ladder** with `delivery_mode` foreground/background, **Honcho config schema** + `surface=declared` routing + `honcho_host_block` storage, **kanban attachments toolset + CLI** + `kanban_attach_url` SSRF guard + modal create-task dialog + board `default_workdir` settings, **cron truthful execution ledger**, **profile-aware approval mode control**, **inline `/reasoning`/`/fast` pickers** on Telegram/Discord/Matrix, **model-picker reverts-in-existing-threads fix**. Reverts: provider-actions extension point (memory); E2E manual-approval test force. **Read this before assuming any section of the main reference is current.**
 
 ## Fast lookup map
 
