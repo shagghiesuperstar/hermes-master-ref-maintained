@@ -190,7 +190,7 @@
 
 ```bash
 hermes --version                       # v0.18.0 (2026.7.1) — local 61e4a5f9, upstream 10423297
-hermes config path                     # /Users/m5mbp/.hermes/profiles/ss/config.yaml
+hermes config path                     # ~/.hermes/profiles/ss/config.yaml
 hermes config check                    # clean (v32→33 update available)
 git -C ~/.hermes/hermes-agent log --oneline 7cfa2fa1..origin/main | wc -l   # 1098
 git -C ~/.hermes/hermes-agent rev-parse origin/main                         # 5b04a024a
