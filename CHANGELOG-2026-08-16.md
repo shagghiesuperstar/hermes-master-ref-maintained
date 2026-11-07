@@ -1,11 +1,13 @@
 # Hermes Architecture Reference — Drift Changelog 2026-08-16
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.20.0 (2026.8.3) — local `eac1e2512` (on `main`, **1,267 commits behind** `origin/main`)
 - **Upstream HEAD reviewed:** `7095e23eb` (origin/main as of 2026-08-16)
 - **Prior SSOT anchor (last drift review upstream HEAD):** `f28469349` (CHANGELOG-2026-08-09)
-- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `references/Hermes_Architecture.md` last synced 2026-06-21
+- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `Hermes_Architecture.md` last synced 2026-06-21
 - **Commits between prior upstream and current upstream:** **1,643** (~188 feat, ~983 fix, rest chore/test/refactor/docs/style; **2** reverts)
 - **Window:** 2026-08-09 → 2026-08-16 (~1 week)
 - **Releases in window:** `v0.20.1` (2026.8.13)

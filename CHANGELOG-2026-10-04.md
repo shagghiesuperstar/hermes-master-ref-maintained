@@ -1,5 +1,7 @@
 # Weekly drift review — 2026-10-04 (Sunday)
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Anchors
 
 - **Local Hermes version/commit:** `v0.21.5+5376.gb12e672.dirty` · `b12e672e23` (2026-09-24)
@@ -39,16 +41,16 @@ Note: the `fix`-heavy share is misleading on its own — the prior week also log
 
 ### Configuration & provider routing
 
-- `400cd692613` — **feat(cli): local models in `hermes model`** — `hermes model` (and `hermes setup`) gain a "Local models" row whenever PM pins an engine for this machine; runs the same handler path as the desktop's Local Models pane. *Relevant to ss:* directly affects how ss surfaces the local oMLX entry.
+- `400cd692613` — **feat(cli): local models in `hermes model`** — `hermes model` (and `hermes setup`) gain a "Local models" row whenever PM pins an engine for this machine; runs the same handler path as the desktop's Local Models pane. *Relevant to local-model setups:* affects how a profile surfaces a local-model entry.
 - `bf87ae620ef` — **feat(models): add gpt-6.1-sol (OpenRouter + direct OpenAI API)** — 1.05M direct, 272K Codex fallback; 272K compaction auto-raise on Codex route. `$2/$10`, cached input `$0.10` (5%, not 6 Sol's 10%), cache write `$2.50`, 2x/1.5x above 272K; `-pro` aliased to base row. Reasoning: `none`/`minimal` return 400 on 6.1 Sol (unlike 6 Sol), so it uses Astra's `low..max` ladder without Astra's account gating. *Not on Nous Portal or Codex OAuth yet for our test account.*
 - `5bb6127c5b1` — **feat(models): add the gpt-6.1-sol-900k Codex OAuth picker variant** — live probe on ChatGPT OAuth streaming `/responses` with `effort=low`: completed at 684,566 / 898,681 / 918,137 input tokens with all three needles recalled; rejected at ~931K+. Real ceiling 922,000. The live catalog still advertises 272K with an 872K ceiling, so the bump is opt-in. *Eligibility is by exact slug, not the gpt-6-sol family prefix.*
-- `f21b9476ba2` — **feat(models): add anthropic/claude-sonnet-5.5 to OpenRouter and Nous Portal catalogs** — Anthropic release 2026-09-28; both backends verified live. *Possible ss heavy-review lane replacement candidate; verify pricing and reasoning behavior before re-routing.*
+- `f21b9476ba2` — **feat(models): add anthropic/claude-sonnet-5.5 to OpenRouter and Nous Portal catalogs** — Anthropic release 2026-09-28; both backends verified live. *Possible heavy-review-lane replacement candidate; verify pricing and reasoning behavior before re-routing.*
 - `652ce40e5bb` — **feat(models): add stealth/space-bunny-alpha to the OpenRouter curated list** — $0 stealth SKU, 1M context, tool support, image/video input. *Cheap/bulk candidate for fallback chain if pricing and quality hold up — verify before adding.*
 - `bdde674296e` — **feat(fast): /fast ultrafast for GPT-6 Astra, priced at the served tier** — `service_tier="ultrafast"`, 6x Standard; broadly available for GPT-6 Astra in API and Codex (Pro 500 / Enterprise). GPT-6.1 Sol Ultrafast "coming soon".
 - `ab66fb8996c` — **feat(models): list gpt-6.1-sol on Nous Portal (now served by /v1/models)**.
-- `5fa55d16785` — **feat(plugins): run third-party plugins in a per-profile plugin host (plugins.isolation: host)** — non-bundled plugins now run in a host process per profile with only that profile's env. Re-entrant; handlers may call back into Hermes core. *New risk surface for ss's plugin-aware workflows; check the implications for grok-coder and any plugin-bearing skill.*
+- `5fa55d16785` — **feat(plugins): run third-party plugins in a per-profile plugin host (plugins.isolation: host)** — non-bundled plugins now run in a host process per profile with only that profile's env. Re-entrant; handlers may call back into Hermes core. *New risk surface for plugin-aware workflows; check the implications for any plugin-bearing skill.*
 - `f1c79255fea` — **feat(plugins): requires.gpu gates a plugin server on the host's GPU vendor** — `requires: {gpu: nvidia}` refuses install on hosts without NVIDIA. *Affects any MCP catalog entry that's GPU-gated.*
-- `51aa249efd5` — **feat(relay): name the Relay plugin files in `hermes doctor` and the startup log** — Relay 0.9 discovers user/system `plugins.toml` outside HERMES_HOME; the new code surfaces which files apply. *Useful for ss when debugging plugin config drift.*
+- `51aa249efd5` — **feat(relay): name the Relay plugin files in `hermes doctor` and the startup log** — Relay 0.9 discovers user/system `plugins.toml` outside HERMES_HOME; the new code surfaces which files apply. *Useful when debugging plugin config drift.*
 
 ### Schema versions & state.db migrations
 
@@ -74,7 +76,7 @@ Note: the `fix`-heavy share is misleading on its own — the prior week also log
 
 ### Skills (format, disabled-gate, preload, provenance)
 
-- `c13232e90c7` — **feat(skills): external mounts get an 'external' provenance tier (#108032)** — `tools/skill_usage:provenance()` gains the `external` tier; skills from `skills.external_dirs` no longer flatten into `agent` in the usage report, dashboard, desktop catalog/detail UI, or learning journey graph. A local copy of the same name keeps winning, mirroring `is_agent_created`'s external exclusion. *Important for ss if any of its skills are mounted via external_dirs.*
+- `c13232e90c7` — **feat(skills): external mounts get an 'external' provenance tier (#108032)** — `tools/skill_usage:provenance()` gains the `external` tier; skills from `skills.external_dirs` no longer flatten into `agent` in the usage report, dashboard, desktop catalog/detail UI, or learning journey graph. A local copy of the same name keeps winning, mirroring `is_agent_created`'s external exclusion. *Important if any skills are mounted via external_dirs.*
 - `e4bab4f7317` — **docs(skills): regenerate skill pages for the braced role-tag placeholders**.
 - `8e543411524` — **docs(skills): state one precedence for duplicate skill names** — operator-facing clarification.
 
@@ -102,7 +104,7 @@ Note: the `fix`-heavy share is misleading on its own — the prior week also log
 
 ### Cron
 
-- `6f7cc7e74ce` — **feat(cron): allow Python scripts to use an external interpreter** — per-job `interpreter` field so a cron `script` / `monitor_script` can run under a user-managed venv. Nothing is installed, frozen, or restored automatically. *Useful for ss cron jobs that need packages not in the Hermes runtime.*
+- `6f7cc7e74ce` — **feat(cron): allow Python scripts to use an external interpreter** — per-job `interpreter` field so a cron `script` / `monitor_script` can run under a user-managed venv. Nothing is installed, frozen, or restored automatically. *Useful for cron jobs that need packages not in the Hermes runtime.*
 - `1fd412e8a08` — **test(sessions): drop SCHEMA_VERSION import the trigram test no longer reads** — cron test cleanup.
 - FTS trigram exclusion cluster: two tests that pinned "one version behind" to `SCHEMA_VERSION - 1` now pin to **v29** (the v30 migration they exercise) since v31 took over.
 
@@ -120,7 +122,7 @@ Note: the `fix`-heavy share is misleading on its own — the prior week also log
 
 ### Kanban
 
-- `8e00bfdf06d` — **feat(kanban): add in-process schedule tool** — cherry-picked from `339cc5589d8`. 17 lines added to `tools/kanban_tools.py` plus tests. *Worth a quick test against the ss kanban lane to confirm behavior matches what we currently rely on.*
+- `8e00bfdf06d` — **feat(kanban): add in-process schedule tool** — cherry-picked from `339cc5589d8`. 17 lines added to `tools/kanban_tools.py` plus tests. *Worth a quick test against a local kanban setup to confirm behavior matches what we currently rely on.*
 - `653c946c368` — **fix(tools): coerce numeric task_id and strip whitespace in kanban_show** (see Schema).
 
 ### Memory / Honcho

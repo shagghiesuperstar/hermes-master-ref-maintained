@@ -1,5 +1,7 @@
 # Drift Review — 2026-09-13 (changelog-as-scaffolding)
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Anchors
 - Local Hermes: v0.21.2 (2026.9.11), commit `31d0a2428e`
 - Upstream HEAD (origin/main): `5dea46d13deec9549bdc2ea703ae9201d733c28d`
@@ -93,4 +95,4 @@ None in this window (one honcho fix `56231e51ad` mentions "revert reaches disk" 
 - SCHEMA_VERSION not probed; assume still 30 unless next pass verifies.
 
 ## SSOT status
-references/Hermes_Architecture.md untouched (scaffolding pattern). SSOT now +649 commits / ~1 week past the v0.21.0 anchor.
+Hermes_Architecture.md untouched (scaffolding pattern). SSOT now +649 commits / ~1 week past the v0.21.0 anchor.

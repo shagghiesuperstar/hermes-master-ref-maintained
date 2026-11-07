@@ -1,29 +1,29 @@
 ---
 name: hermes-architecture-reference
 description: Use when troubleshooting, designing, implementing, optimizing, maintaining, or reviewing Hermes Agent architecture, internals, config, tools, profiles, memory, MCP, gateway, cron, plugins, skills, provider routing, context compression, or security behavior. Treat official Hermes docs and the NousResearch/hermes-agent repo as authoritative sources; this skill is an offline architecture reference that must be kept in sync.
-version: 1.20.0
-last_drift_review: 2026-11-01
-repo_commit: 4f22543509 (last fully-synced anchor; upstream now c7c7e0fa92, +34,616 commits pending; SSOT untouched per skill protocol)
-author: ss
+version: 2.0.0
+last_drift_review: 2026-11-06
+repo_commit: 9f23c4311a4c4837078081db4f3cd8deab23c0fe
+author: Hermes Architecture Reference maintainers
 license: MIT
 metadata:
   hermes:
     tags: [hermes, architecture, troubleshooting, maintenance, optimization, implementation, internals, mcp, gateway, memory, skills, cron]
-    related_skills: [hermes-agent, memory-stack-snapshot, hindsight]
+    related_skills: [hermes-agent]
 ---
 
 # Hermes Architecture Reference
 
 ## Purpose
 
-This skill is the local/offline architecture reference for Hermes Agent. Load it for **any** Hermes Agent troubleshooting, architecture decision, implementation, optimization, maintenance, or drift-review work.
+This skill is the local/offline architecture reference for Hermes Agent. Load it for any Hermes Agent troubleshooting, architecture decision, implementation, optimization, maintenance, or drift-review work.
 
-Authoritative sources remain:
+Authoritative sources:
 
-1. Official documentation: `https://hermes-agent.nousresearch.com/docs/`
-2. Official repository: `https://github.com/NousResearch/hermes-agent`
+1. Official documentation: <https://hermes-agent.nousresearch.com/docs/>
+2. Official repository: <https://github.com/NousResearch/hermes-agent>
 
-The attached reference file in this skill was compiled from those two sources and should be treated as a high-value offline SSOT, but **live docs/repo win if they differ**.
+The main reference ([Hermes_Architecture.md](./Hermes_Architecture.md)) was rebuilt on 2026-11-06 from those two sources, anchored to upstream commit `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (latest release at that time: [v0.23.0](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0), published 2026-11-05). **Live docs and the live repository win if they differ.** Community sources (upstream issues and PRs, HermesHub at <https://hermeshub.com>) are secondary: they may be cited for context but must be labelled as community/secondary, never presented as official behavior. See [README.md](./README.md) for the repository overview.
 
 ## Required usage rule
 
@@ -41,36 +41,42 @@ Do not guess Hermes CLI flags, config keys, tool names, provider semantics, MCP 
 
 Read the full architecture reference here:
 
-```text
-references/Hermes_Architecture.md
-```
+- [Hermes_Architecture.md](./Hermes_Architecture.md)
 
 Use targeted reads/searches instead of loading the full file into the chat when possible. It is large.
 
-## Targeted quirks
+## Companion files
 
-- `references/CHANGELOG-2026-11-01.md` — weekly drift review (2,035 commits since the 2026-10-25 upstream anchor; upstream now `c7c7e0fa92`, +34,616 since the SSOT anchor, local 3,226 behind). Dominant themes: **remote config plane** (`HERMES_CONFIG_BACKEND=remote` + `ConfigBackend` seam), **GitHub Copilot removed from core** (now a `github-copilot` labs plugin + left-core migration), `hermes cron cancel` / `sessions recover` / `webapp` / `hooks`, **`pre_llm_call` can block a turn**, `/model reset`, approval prompts showing hidden characters, `compression.prepare_ahead`, `refresh-prompts`, per-job cron timezone + `grace_minutes` + missed-run policy, per-room intentional silence, 5 reverts. **Also corrects the prior two passes: `SCHEMA_VERSION` is 32 (not v31) and the SSOT body is 133 days stale — read the "Corrections to prior passes" table before trusting any earlier changelog's staleness figure.** **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-11-24.md` — weekly drift review (32,581 commits since `4f22543509`; upstream now `d050956633`, local 1,191 behind). **Massive multi-month drift — largest window yet.** Dominant themes: gateway hardening (200+ session/routing/identity fixes), Webapp server from gateway (Nous sign-in gated), Desktop plugin SDK expansion (file access, media rendering, preview gates), vault OS-keychain opt-in, plugin catalog growth (30+ entries), high-velocity fix cluster (13,605 commits). **Correction (2026-11-01): this entry's "No schema bump (v31 unchanged)" is wrong — upstream is `SCHEMA_VERSION` 32; and its "60 days stale" understates the SSOT body's real age (133 days).** Changelog-as-scaffolding only per operator directive; SSOT untouched. **Read this before assuming any section of the main reference is current.**
-- `references/approvals-mode-quirks.md` — `approvals.mode: off` write/repair playbook (covers `hermes config set` YAML 1.1 coercion, `config get` not existing, `config show` not displaying `approvals:`, and `patch`/`write_file` tool guards that block direct writes — verified 2026-06-28).
-- `references/citation-verification.md` — protocol for verifying user/shared docstrings before execution. Lessons from 2026-06-28 where a Shag-supplied procedure failed two CLI calls before any step ran.
-- `references/config-migration-and-provider-routing.md` — provider migration playbook: no-`sed` Python-only edits, `model.provider: moa` / `model.default: default` namespace-collision bug, live OpenRouter slug validation, stale-provider purge, native-provider worker-profile creation (`--clone-from` + SOUL rewrite), routing-role vs runnable-profile distinction, AGENTS.md roster hygiene, and a pre-completion verification checklist.
-- `references/CHANGELOG-2026-07-05.md` — drift deltas v0.17.0 → v0.18.0 (1098 commits). High-impact architecture changes since the last full reference re-compile: `extra_headers` per provider, persisted per-session `/model`, MoA `fanout: user_turn`, stacked `/skill` invocations, MCP GUI tab, pre-tool-call approval gate, cron profile-secret scope, and 20+ more. **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-07-12.md` — weekly drift review (214 commits since `cdcbc3a31`). Major additions: state.db schema v19 (`gateway_routing` table, sessions.json demoted to legacy mirror), `approvals.deny` (pre-yolo deny list), `secrets` subsystem (pluggable `SecretSource` + 1Password `op://`), webhook body-size limits on 5 platforms, ~80% TTFT cut (TTFT round 2), Codex gpt-5.4 autoraise, durable one-shot cron run-claim. Reverts: pre-tool-call approval gate (#58698), `dynamic-workflow` skill. **Read this before assuming any section of the main reference is current.**
-- `references/drift-review-runbook.md` — mechanical execution details for the weekly drift review: anchor probes, commit-type concentration command, feat-only inventory, canonical architecture area buckets (1:1 with Hermes_Architecture.md sections), spot-verification commands, frontmatter bump recipe, public-mirror sync.
-- `references/neo4j-graphiti-bolt-pool.md` — Neo4j 2026.05.0 (Homebrew) bolt pool tuning, Graphiti MCP keepalive / CancelledError root cause, verified config keys, and `brew services stop && start` recovery for launchctl bootstrap I/O error 5. Lessons from 2026-07-08 session where a third-party skill doc had the wrong config key.
-- `references/CHANGELOG-2026-07-19.md` — weekly drift review (502 commits since `aaeba213d`). Major additions: smart approvals now default (`approvals.mode: smart`), gpt-5.6 family (6 slugs, 272K compaction auto-raise), Fireworks AI as preferred provider, grok-4.5 GA, reasoning effort levels `max`/`ultra`, Hermes Cloud connection mode in desktop, OIDC client-credentials relay, webhook payload filters, PTY keep-alive/reattach/session-registry, Tencent Hy3 GA swap. **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-07-26.md` — weekly drift review (1,074 commits since `7b5ba2054`). Major additions: **schema v22** (`session_model_usage` PK dimension + table rebuild for per-task auxiliary accounting), **`api_content` sidecar** for exact-prompt-cache replay (27.9s → 2.4-5.8s first-call TTFT fix), **durable delivery-obligation ledger** (gateway final-response loss fix), **per-session turn lease** (closes concurrent-turn alternation wedge), **profile-based routing for inbound messages** (Discord guilds/channels/threads → profiles), **`hermes config get`/`unset`**, **unknown top-level key warnings + `hermes doctor` deprecated-key/env reporting**, **per-model reasoning_effort overrides**, **per-task auxiliary reasoning_effort**, **MoA per-slot reasoning_effort**, **`/model --once` one-turn override**, **`/topup` + `/subscription` Nous plan UX**, **MCP exact version pins** + Blender catalog entry + Unreal MCP live-verify, **Upstage Solar** + **DeepInfra** providers, **unified 3-store credentials** (`.env` + `auth.json` + `config.yaml`), **Blender companion skill** + **MCP-OAuth-remote-gateway skill**, **computer-use verify → escalate ladder** with `delivery_mode` foreground/background, **Honcho config schema** + `surface=declared` routing + `honcho_host_block` storage, **kanban attachments toolset + CLI** + `kanban_attach_url` SSRF guard + modal create-task dialog + board `default_workdir` settings, **cron truthful execution ledger**, **profile-aware approval mode control**, **inline `/reasoning`/`/fast` pickers** on Telegram/Discord/Matrix, **model-picker reverts-in-existing-threads fix**. Reverts: provider-actions extension point (memory); E2E manual-approval test force. **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-08-09.md` — biweekly drift review (5,196 commits since `65b73eb1e`; releases v0.19.0 → v0.20.0). Major additions: **schema v23–v25** + SessionDB mixin split, **`agent.max_turns` default 90→500**, **tiered tool_search disclosure (0/1/2)** + per-server mixed listings, **micro-compaction** + **native gpt-5.6 Responses server-side compaction**, **MCP schema cache + lazy start + trust tiers (`readOnlyHint`)**, **ESTOP `hermes pause`/`resume`**, **protected instruction-file writes**, **self-repo git mutation hard-block**, **cron notepad + monitor-mode + preflight `blocked_config`**, **outbound webhooks**, **A2A platform plugin**, **portable Agent Plugins v1** (incl. streamable-http), **delegation `output_schema`**, **`/refine` `/heartbeat` `/goal gate` `/init` `!` shell**, **`hermes import-agent`**, **`hermes doctor --live` + state.db health stats**, **kanban live comment steer + per-task model/reasoning pins**, **reset-aware primary restore**, **Actual Computer provider**, **wake word + client-mic streaming**, clean-room MIT office skills + advisory skill linter. Reverts: **DCP context engine**, **NeMo Relay shared metrics**. Full SSOT now **+6,986 commits / ~7 weeks stale — re-compile overdue**. **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-08-16.md` — weekly drift review (1,643 commits since `f28469349`; release v0.20.1). Major additions: **schema v26** (`git_metadata_generation`), **compression watermark commit** + **lean `tail_mode`**, **`model_overrides`**, **`key_cmd` credential source**, **delegation defaults 50→250 / 3→10**, **`/loop` recurring wakeups**, **foreign Claude/Codex session import**, **`/save` multi-format export**, **plugin manifest v2** + packs/event-bus/redaction registry, **multi-connection desktop registry**, **per-profile MCP/cron RPCs** + `share_auth`, **pre_tool_call `modify` hooks**, **cua-driver browser-approve**, **kanban notify/wake modes**, **webhook per-route toolsets**, **Hindsight recall_sync**, **disk+memory pressure banners**, **`cron.allow_agent_scheduling`**. Reverts: **MoA Model Council mode**, profile truncation routing. Full SSOT now **+8,629 commits / ~8 weeks stale — re-compile critically overdue**. **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-08-23.md` — weekly drift review (1,540 commits since `7095e23eb`; releases v0.20.2 → **v0.20.5**). Major additions: **`agent.max_turns` default unlimited**, **OpenCode Free + keyless-auth policy**, **Ox Alpha / GLM-5.3**, **Codex 272K default + `-900k` opt-in**, **MCP SDK 2.x + 2026-07-28 protocol**, **MCP 50K spill**, **gateway control socket**, **Bot Mode `message_agent` + `hermes peer`**, **cron memory-on + per-job reasoning_effort + bot-chat delivery**, **update receipts / `--plan` / sibling config migration**, **5-vendor keyless web ring + Keenable**, **browser control broker**, **kanban memory-pressure dispatch cap**, **plugin_guard on install**, **identical tool-recall stubs**, **`hermes worktree list/prune`**, **positive process identity**. SCHEMA_VERSION stays **26**. Full SSOT now **+10,169 commits / ~9 weeks stale — re-compile critically overdue**. **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-08-30.md` — weekly drift review (1,649 commits since `f293e7206`; release **v0.20.6**). Major additions: **lean tail retention DEFAULT**, **system prompt + dynamic tool schemas rebuild at compaction boundary**, **provider-usage context anchors**, **two-line conversation clock**, **identity behavior-spec rewrite**, **shipped-skills slim (−26%) + github merge + pdf/OCR absorb**, **`skill_manage.operations[]`**, **`/plan`+`/review` builtins**, **cross-profile write guard RETIRED**, **delegate tasks-only (−36% tok)**, **remote code kernels + temp_dir off tmpfs**, **web TTL caches**, **cron durable incidents+ack**, **gateway pause-for-update socket**, **image-managed update refuse**, **Desktop remote MCP OAuth relay**, **MCP catalog bulk + Cloudflare excludes**, **Bot Mode #93091 reliability**. Revert: **gw-event-replay #94245**. SCHEMA_VERSION stays **26**. Full SSOT now **+11,818 commits / ~10 weeks stale — re-compile critically overdue**. **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-09-13.md` — weekly drift review (649 commits since `4f22543509`; releases v0.21.0 → **v0.21.2**). Major additions: **multiplex gateway serves every live profile (BREAKING: `gateway.multiplex_profile_allowlist` dropped)** + `hermes gateway migrate --multiplex/--standalone` + `/p/<profile>/` ingress + shared-listener binding, **IMDS metadata-endpoint fetches flagged for approval**, **OpenRouter OAuth PKCE login**, **cron bounded auto re-runs + planned-downtime skip + `resnap`**, **HEIF/HEIC/AVIF vision decode**, **GPT-Live full-duplex voice mode**, Honcho peer-model rework (`sessionAiPeerPrefix`, `honcho peers map`), `display.vim_mode` + `/vim`, large `@hermes/shared` TS consolidation, `agent_loop_stopped` interrupt hook, curator prune 90→30d, new skills (dream-loop, system-atlas, mono-color, pr-lens, dynamic-workflow re-added). No reverts. Read this before assuming any section of the main reference is current.
-- `references/CHANGELOG-2026-09-20.md` — weekly drift review (**4,175 commits** since `4f22543509`; releases v0.21.0 → **v0.21.3**). Major additions: **model-provider plugin system reached usable maturity** (plugin-owned `hermes auth`, `ProviderProfile.classify_api_error`, declarative OAuth/AC+PKCE, per-model capability metadata, plugin account usage hook) — `749443e292`, `97fd8c8f2a`, `bce20d0b1f`, `ef0bac6cdd`, `400b6c41cd`, `dce233e809`, `de66512ab7`. **Managed local llama.cpp runtime** with `hermes desktop --local` (`43e67d872f`). **GPT-6 Astra** + Astra Pro + 900K alias join the catalog (`f159e581c7`, `2c315ff59b`, `33b2461be4`). **Cron reliability suite** — failure-incident ledger with one-alert-per-outage and complete-on-success/reopen-on-replay (`498abb677e`, `7aa466665b`, `3f1bf45adf`); `cron doctor` health check (`b028fe632e`); `pinned` model semantics per job (`0469740ab3`); degraded-marker redaction + claim-TTL headroom (`15a3691404`, `2d0867695d`, `fba9b930f7`); `[CRON_FAILURE]` evidence verbatim (`9f48f4ed04`); bot-chat delivery hardening (10+ fixes incl. `4d65eca72b`, `fa939860ca`, `8235afad5d`). **Voice/STT/TTS** — `tts.streaming.min_len` config (`9823ce4ff1`), `XAI_API_KEY` first precedence (`3b0aae77ee`, `27a30d8515`), ElevenLabs v3 + gpt-transcribe in pickers (`71df3e5aee`), voice input identity-seam routing (`8df0a03793`), HEIF/HEIC/AVIF vision (`0a545f7fa5`), GPT-Image 2.5 (`7777f8c350`, `b1f003e186`). **Security** — GitSpawn RCE class closed (GHSA-7x36-8jrh-v4pw, `f6234d00c5`), OAuth callback XSS (`d3fc0cca0f`), `HERMES_HOME` write-deny for secret stores (`1c0d95badb`, `e7cd1848c9`, `56d2438a45`), MCP User-Agent (`7eed615690`). **Profile/clone** — `--sync-imports` (`7bb52c0b74`), `hermes sessions repair-profiles` (`67757285f6`). **Gateway** — profile-scoped reconnect threshold, vault RPC profile-scope, `route inbound messages to profiles by sender user_id` (`d6f3285b81`), identity-first session keys (`94218e192e`). **agent** — bounded auto-recovery ladder (`0752127c5e`), one-shot runs drop self-improvement footprint (`a79d1d3a71`). **Claude-fable-5.1** in Nous + OpenRouter (`9f069a1175`). **15 reverts** — concentrated in Desktop catalog browser feature experimentation (cumulative revert pattern: feature added → regression → reverted). **SCHEMA_VERSION stays at 30.** Reference now ~6,000 commits behind and **+10 weeks stale** — re-compile critically overdue. Read this before assuming any section of the main reference is current.
-- `references/CHANGELOG-2026-09-27.md` — weekly drift review (since prior changelog 2026-09-20; **+18,857 commits** since SSOT anchor `4f22543509`; upstream now `6f7a7991`). Dominant themes: **desktop plugin SDK expansion** (~43 `feat(desktop)` — capabilities bridge, composer, sidebar, session-list, model-pill, settings, sandboxed embed, French/German/Spanish i18n, Interface mode, Connectors page replaces MCP tab), **release pipeline rework** (~30 `feat(release)` — attempt refs, abandon markers, receipts, canary derivation, `--skip-bundles`/`--skip-tests`), **PM subsystem** (6 `feat(pm)` — `restart_needed()`, in-process generation adoption, `hermes pm lock`, isolated dev venvs), **plugin catalog growth** (28+ new entries). High-impact: `feat(web): serve managed search through Perplexity` (`749220ef00`); `feat(webhook): mirror cross-platform deliveries into the target chat session` (`11fb429f49`); `fix(sessions): refuse to delete a session row a live turn still owns` (`40523600b0`) + `skipped_active` in bulk-delete; `fix(mcp): reload OAuth provider on first sight when no tokens in memory` (`#39551`); `feat(plugins): public event bridge for plugin backends` (`8034d493dc`) — `hermes_cli.plugin_events.broadcast_plugin_event` with dotted `plugin.<id>.<event>` namespace; `feat(bot_desktop): ship Bot Screen on hosted images (-desktop tags)` (`686c34d3f6`) — Docker image axis `[slim, desktop]` with `:latest-desktop` etc. carrying Xvnc/Xfce/headed Playwright Chromium. **Agent streaming** cluster — inline `<think>` recovery, think-scrubber, only 4xx/5xx body codes count as stream-error HTTP status (`#121270`), retry-exhausted partial-output retention (`#119001`). **Email subsystem rewrite** — stdlib From parser, clause-level DMARC/SPF/DKIM (7-commit cluster). **Persistence rewrite** — transcript rows versioned by digest + metadata-only adoption (10-commit cluster). **Schema v30 unchanged.** Reverts: 1 (`Revert "fix(tts): install kittentts on python 3.14 via the misaki fork"`). **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-10-04.md` — weekly drift review (3,259 commits in the weekly window; **+22,139 commits** since SSOT anchor `4f22543509`; upstream now `8d5e3e4121`). **Schema v30 → v31** — `messages.message_uid` (uuid4 hex) + three sibling message-identity columns, with a settled-trigger fix that closes a write-lock regression; `_absorbed_message_uids` records merged consecutive-user uids. **Models** — gpt-6.1-sol / -pro / -900k (1.05M direct, 272K Codex fallback, 272K compaction auto-raise; `-900k` opt-in slug proven to ~918K input tokens, rejected at ~931K); `anthropic/claude-sonnet-5.5` on OpenRouter + Nous Portal; `stealth/space-bunny-alpha` added to OpenRouter curated list; `/fast ultrafast` for GPT-6 Astra at 6x Standard. **Plugins** — `plugins.isolation: host` (per-profile host process for non-bundled plugins; ABC checks, RemotePluginContext, re-entrant); `requires.gpu` gates a plugin server on the host's GPU vendor; birkin-mnemosyne memory provider; hermes-cron 1.2.0, hermes-dreaming 2.1.0, hermes-otel 1.18.2, hermes-beads v0.1.2 (`bd_bin` security fix), hermes-pii configuration. **Skills** — external mounts get an `'external'` provenance tier (joins `agent` and `bundled` in the usage report, dashboard, desktop UI, learning journey graph). **i18n** — pluggable layered language packs (bundled → plugin packs → user overlay) across core, Desktop, TUI. **CLI** — `hermes model` now shows Local models when PM pins an engine; `hermes status --short`; summary is the default `hermes status`. **Cron** — per-job `interpreter` field for Python scripts (no install/freeze/restore). **PM** — llama.cpp v0.5.0 (b11146), Linux arm64 CUDA, libgomp bundled. **Install** — libatomic host package step. **Email** — `authserv_id` required for authenticated-sender mode; fails closed if absent. **Reverts (15+)** — concentrated in approval-panel wait-forever behavior (11 reverts) + the third landing of the Skills/Plugins card catalog browser (#119381) + stale worktree reaping revalidation (#132260). **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-11-10.md` — weekly drift review (29,791 commits since 2026-10-14 SSOT anchor; upstream now 22063fc099). **Massive multi-month drift — largest window yet.** Dominant themes: plugin system maturation (post_message, post_compaction, on_session_delete hooks; public API stabilization), Desktop onboarding i18n, gateway route-bound model keys refactoring, plugin catalog growth (19+ new entries: scalekit, offpeak-bekci, Tsubasa, Kumiho Memory, Italian language, WhatsApp voice, Hermes Gadget), local-model UX prioritization in onboarding, NVIDIA NIM defaults. **Correction (2026-11-01): this entry's "No schema bump (v31 unchanged)" is wrong — upstream is `SCHEMA_VERSION` 32; and its "27 weeks stale" measures from the review anchor, not the SSOT body's real last sync (2026-06-21 = 19 weeks).** Changelog-as-scaffolding only per operator directive; SSOT untouched. **Read this before assuming any section of the main reference is current.**
-- `references/CHANGELOG-2026-10-14.md` — weekly drift review (3,852 commits in 10 days since 2026-10-04; +25,991 commits since prior anchor). [prior summary retained for chain integrity]
-- `references/CHANGELOG-2026-09-06.md` — weekly drift review (5,800 commits since `4f22543509`; release **v0.21.0**). Major additions: **SCHEMA_VERSION 26→30** + **FTS_STORAGE_VERSION 2** (compression recovery deadline, frozen `sessions.tool_names`, cron+subagent trigram exclusions), **managed llama.cpp local runtime**, **OpenRouter per-model `provider_routing`**, **Nous anthropic_wire→chat/completions default**, **core-tool deferral (−49% desktop schemas)**, **plugin import-path compat window (remove 2026-09-14)**, **delegation completion groups**, **cron doctor + `failure_deliver` + `delivery.notify`**, **remote sandbox MEDIA fetch**, **SQLite media denylist**, **`approvals.deny` in containers**, **`/fast auto|cold`**, **opt-in shared-metrics telemetry**, **Bot Mode durable group authority/replay**, **GPT-6 Astra / Fable 5.1 / Gemini 3.8** catalogs, **Perplexity+Tavily web backends**, **AGENTS.md 32k subdirectory ceiling**. Full SSOT now **+17,618 commits / ~11 weeks stale — re-compile critically overdue**. **Read this before assuming any section of the main reference is current.**
+All files live in the repository root (flat layout).
+
+- [README.md](./README.md) — repository purpose, reading order, update cadence, contribution and privacy rules, source authority.
+- [drift-review-runbook.md](./drift-review-runbook.md) — mechanical execution details for the periodic drift review: anchor probes, commit-type concentration, feat-only inventory, architecture area buckets, spot-verification commands, frontmatter bump recipe.
+- [approvals-mode-quirks.md](./approvals-mode-quirks.md) — `approvals.mode: off` write/repair playbook (covers `hermes config set` YAML 1.1 coercion, `config get` behavior, `config show` not displaying `approvals:`, and file-tool guards that block direct writes; verified 2026-06-28, so re-check against current docs).
+- [citation-verification.md](./citation-verification.md) — protocol for verifying user-supplied or shared procedures and docstrings before executing them.
+- [config-migration-and-provider-routing.md](./config-migration-and-provider-routing.md) — provider migration playbook: structured (non-`sed`) edits, `model.provider` / `model.default` namespace-collision pitfall, live OpenRouter slug validation, stale-provider purge, worker-profile creation, routing-role vs runnable-profile distinction, and a pre-completion verification checklist.
+
+## Changelog index (historical snapshots)
+
+Each dated changelog below is a **historical snapshot** of one drift-review pass. It records what the reviewer observed against the upstream head of that day. It is not current truth, and any staleness or "commits behind" figure inside it describes that day only. Use the changelogs for provenance and for finding the commit SHAs behind a change; use [Hermes_Architecture.md](./Hermes_Architecture.md), the official docs, and the upstream repo for current behavior. The 2026-11-06 entry describes the rebuild that produced the current reference.
+
+- [CHANGELOG-2026-11-06.md](./CHANGELOG-2026-11-06.md) — rebuild of the main reference against official docs and upstream `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (v0.23.0), privacy scrub, changelog date corrections, new README.
+- [CHANGELOG-2026-11-01.md](./CHANGELOG-2026-11-01.md) — snapshot: remote config plane (`HERMES_CONFIG_BACKEND=remote` and the `ConfigBackend` seam), GitHub Copilot moved out of core into a labs plugin, `hermes cron cancel`, `sessions recover`, `webapp`, `hooks`, `pre_llm_call` able to block a turn, `/model reset`, `compression.prepare_ahead`, per-job cron timezone and missed-run policy; corrects `SCHEMA_VERSION` figures in earlier snapshots.
+- [CHANGELOG-2026-10-25.md](./CHANGELOG-2026-10-25.md) — snapshot (originally filed under a mis-dated name, corrected 2026-11-06): gateway hardening, webapp server from the gateway, desktop plugin SDK expansion, vault OS-keychain opt-in, plugin catalog growth. Its schema-version statement was corrected by the 2026-11-01 snapshot.
+- [CHANGELOG-2026-10-18.md](./CHANGELOG-2026-10-18.md) — snapshot (originally filed under a mis-dated name, corrected 2026-11-06): plugin system maturation (new hooks, public API stabilization), desktop onboarding i18n, gateway route-bound model keys, plugin catalog growth, local-model onboarding UX, NVIDIA NIM defaults. Its schema-version statement was corrected by the 2026-11-01 snapshot.
+- [CHANGELOG-2026-10-14.md](./CHANGELOG-2026-10-14.md) — snapshot: prior summary retained for chain integrity.
+- [CHANGELOG-2026-10-04.md](./CHANGELOG-2026-10-04.md) — snapshot: schema v30 to v31 (`messages.message_uid` and sibling identity columns), gpt-6.1 family, `plugins.isolation: host`, `'external'` skill provenance tier, layered i18n language packs, per-job cron `interpreter`, `authserv_id` requirement for authenticated-sender email.
+- [CHANGELOG-2026-09-27.md](./CHANGELOG-2026-09-27.md) — snapshot: desktop plugin SDK expansion, release pipeline rework, PM subsystem, plugin catalog growth, Docker image axis `[slim, desktop]`, agent streaming fixes, email subsystem rewrite, transcript persistence rewrite.
+- [CHANGELOG-2026-09-20.md](./CHANGELOG-2026-09-20.md) — snapshot: model-provider plugin system maturity, managed local llama.cpp runtime, cron reliability suite, voice/STT/TTS changes, security fixes, profile and clone changes, gateway profile routing.
+- [CHANGELOG-2026-09-13.md](./CHANGELOG-2026-09-13.md) — snapshot (v0.21.0 to v0.21.2): multiplex gateway serving every live profile (breaking), `hermes gateway migrate`, IMDS endpoint approval, OpenRouter OAuth PKCE login, cron bounded re-runs, HEIF/HEIC/AVIF vision decode, full-duplex voice mode, Honcho peer-model rework.
+- [CHANGELOG-2026-09-06.md](./CHANGELOG-2026-09-06.md) — snapshot (v0.21.0): schema 26 to 30, managed llama.cpp runtime, OpenRouter per-model `provider_routing`, core-tool deferral, delegation completion groups, cron doctor, opt-in shared-metrics telemetry, new model catalogs, Perplexity and Tavily web backends.
+- [CHANGELOG-2026-08-30.md](./CHANGELOG-2026-08-30.md) — snapshot (v0.20.6): lean tail retention default, prompt and tool-schema rebuild at compaction boundary, shipped-skills slimming, `skill_manage.operations[]`, cross-profile write guard retired, cron durable incidents, gateway pause-for-update socket.
+- [CHANGELOG-2026-08-23.md](./CHANGELOG-2026-08-23.md) — snapshot (v0.20.2 to v0.20.5): `agent.max_turns` unlimited default, keyless-auth policy, MCP SDK 2.x, gateway control socket, Bot Mode `message_agent`, update receipts and `--plan`, browser control broker, `plugin_guard` on install.
+- [CHANGELOG-2026-08-16.md](./CHANGELOG-2026-08-16.md) — snapshot (v0.20.1): schema v26, compression watermark commit and lean `tail_mode`, `model_overrides`, `key_cmd` credential source, delegation defaults, `/loop`, plugin manifest v2, multi-connection desktop registry, `pre_tool_call` `modify` hooks.
+- [CHANGELOG-2026-08-09.md](./CHANGELOG-2026-08-09.md) — snapshot (v0.19.0 to v0.20.0): schema v23 to v25, tiered `tool_search` disclosure, micro-compaction, MCP schema cache and trust tiers, `hermes pause`/`resume`, cron notepad and monitor mode, outbound webhooks, A2A platform plugin, portable Agent Plugins v1, `hermes import-agent`, `hermes doctor --live`.
+- [CHANGELOG-2026-07-26.md](./CHANGELOG-2026-07-26.md) — snapshot: schema v22, `api_content` sidecar for prompt-cache replay, durable delivery-obligation ledger, per-session turn lease, profile-based routing for inbound messages, `hermes config get`/`unset`, unified credential stores, kanban attachments, cron execution ledger.
+- [CHANGELOG-2026-07-19.md](./CHANGELOG-2026-07-19.md) — snapshot: smart approvals default, gpt-5.6 family, Fireworks AI provider, reasoning effort levels `max`/`ultra`, OIDC client-credentials relay, webhook payload filters, PTY keep-alive and reattach.
+- [CHANGELOG-2026-07-12.md](./CHANGELOG-2026-07-12.md) — snapshot: state.db schema v19 (`gateway_routing` table), `approvals.deny`, pluggable `secrets` subsystem, webhook body-size limits, TTFT reductions, durable one-shot cron run-claim; two reverts.
+- [CHANGELOG-2026-07-05.md](./CHANGELOG-2026-07-05.md) — snapshot (v0.17.0 to v0.18.0): per-provider `extra_headers`, persisted per-session `/model`, MoA `fanout: user_turn`, stacked `/skill` invocations, MCP GUI tab, cron profile-secret scope.
 
 ## Fast lookup map
 
@@ -100,77 +106,54 @@ The reference covers:
 - File dependency chain and import order
 - Key constants and defaults
 
+Check the table of contents of [Hermes_Architecture.md](./Hermes_Architecture.md) for the exact current section list.
+
 ## Drift review protocol
 
-Hercules must review this skill weekly and update it if it drifts from the authoritative sources.
+The maintainer reviews this skill after each upstream release and at least weekly, and updates it if it drifts from the authoritative sources. The mechanical commands live in [drift-review-runbook.md](./drift-review-runbook.md).
 
-### Weekly review checklist (canonical, post-2026-07-12)
+### Review checklist
 
-1. **Establish anchors.** Record four facts up front — they go in the changelog header verbatim:
-   - Local Hermes commit (`hermes --version` + `git -C ~/.hermes/hermes-agent rev-parse HEAD`)
-   - Upstream HEAD (`git rev-parse origin/main` after `git fetch origin main`)
-   - Local-behind-upstream commit count (`git rev-list --count HEAD..origin/main`) — **non-zero is normal**; the local install can trail upstream by weeks. Don't conflate "I haven't pulled" with "I haven't reviewed."
-   - Prior SSOT anchor (the `repo_commit` line in this SKILL.md frontmatter)
-2. **List the delta.** `git log --oneline <prior_anchor>..<upstream>` — note the total count and rough feat/fix/refactor breakdown.
-3. **Bucket the delta by architecture area, NOT by commit.** Canonical area list (matches the section structure of `references/Hermes_Architecture.md` so the next re-compile has a 1:1 merge map):
-   - Configuration & provider routing
-   - Schema versions & state.db migrations
-   - Approvals & security
-   - Skills (format, disabled-gate, preload)
-   - MCP (auth, parked-revival, preflight)
-   - Sessions & state
-   - Compression / context (TTFT, autoraise, native paths)
-   - CLI (new commands, removed commands, behavior changes)
-   - Cron (run-claim, scheduling, past-timestamp rejection)
-   - Gateway (routing, pairing, session-key guards, multiplex)
-   - Platform adapters — Discord, Telegram, WhatsApp, Feishu, MS Graph, SMS, Mattermost, Slack (per-platform entries)
-   - Computer-use (cua-driver, env sanitization)
-   - Providers / Auth (OAuth, Z.AI, Codex, Nous, Anthropic, OpenRouter, etc.)
-   - Web / search providers (Firecrawl, exa, parallel, tavily, brave-free)
-   - Docker / Photon
-   - Desktop / TUI
-   - Secrets (SecretSource plugin system, Bitwarden, 1Password)
-   - Reverts (worth a dedicated section — call them out by PR number)
-   - Salvaged PRs (cherry-picks preserving authorship; mention `AUTHOR_MAP` updates)
-4. **Spot-verify high-impact commits before quoting.** For each `feat(...)`, `refactor(...)`, or revert, run `git show --stat <sha>` and confirm the body matches the commit message. Drift reviews fail when the changelog claims things the commit doesn't actually do.
-5. **Decide: re-compile OR changelog-as-scaffolding.** Use the decision tree below.
-6. **Write the dated changelog** (`references/CHANGELOG-YYYY-MM-DD.md`) — even for sub-threshold windows. The chain of changelogs is the audit trail and the scaffold the next re-compile consumes. See the protocol subsection below for the 8-step format.
-7. **Bump the SKILL.md frontmatter** with the exact 4 mechanical edits:
-   - `version` (semver minor bump on every drift review)
+1. **Establish anchors.** Record these facts up front; they go in the changelog header verbatim:
+   - Local Hermes commit (`hermes --version` plus `git -C <hermes-agent-checkout> rev-parse HEAD`)
+   - Upstream HEAD (`git rev-parse origin/main` after `git fetch origin main`), plus the latest release tag
+   - Local-behind-upstream commit count (`git rev-list --count HEAD..origin/main`). A non-zero count is normal; a local install can trail upstream. Do not conflate "I have not pulled" with "I have not reviewed."
+   - Prior reference anchor (the `repo_commit` line in this file's frontmatter)
+2. **List the delta.** `git log --oneline <prior_anchor>..<upstream>`; note the total and a rough feat/fix/refactor breakdown.
+3. **Bucket the delta by architecture area, not by commit**, using the area list in the runbook (it mirrors the section structure of [Hermes_Architecture.md](./Hermes_Architecture.md) so the next merge has a 1:1 map). Call out reverts by PR number.
+4. **Spot-verify high-impact commits before quoting.** For each `feat(...)`, `refactor(...)`, or revert, run `git show --stat <sha>` and confirm the body matches the message.
+5. **Decide: rebuild or changelog-only.** Use the decision table below.
+6. **Write the dated changelog** (`CHANGELOG-YYYY-MM-DD.md` in the repository root) even for small windows. The chain of changelogs is the audit trail. Never overwrite a prior changelog, and never date a note in the future.
+7. **Bump the frontmatter** of this file with the mechanical edits:
+   - `version` (semver minor bump on every review; major bump on a full rebuild)
    - `last_drift_review: YYYY-MM-DD`
-   - `repo_commit` — format as `<anchor> (last fully-synced anchor; upstream now <head>, +<n> commits pending; SSOT untouched per skill protocol)` when changelog-only, or `<head>` when full re-compile lands.
-   - Add a pointer under "Targeted quirks" to the new changelog with the explicit "Read this before assuming any section of the main reference is current" warning.
-8. **Do NOT edit `references/Hermes_Architecture.md` unless doing a full re-compile** (see the pitfall — partial edits leave the reference looking current but inconsistent).
+   - `repo_commit`: the full 40-character upstream SHA the reference was verified against. If a pass was changelog-only, keep the last fully synced SHA here and describe the pending delta in the changelog, not in the frontmatter value.
+   - Add the new changelog to the index above, labelled as a historical snapshot.
+8. **Do not partially edit [Hermes_Architecture.md](./Hermes_Architecture.md)** unless doing a full rebuild; partial edits leave the reference looking current but inconsistent.
 
-### Re-compile vs changelog-as-scaffolding — decision tree
+### Rebuild vs changelog-only decision table
 
 | Condition | Action |
 |---|---|
-| Prior SSOT anchor < 1 week old AND delta < 50 commits | Inline report only — no changelog file needed. Patch `last_drift_review` + log a session_search note. |
-| Delta 50-500 commits in a single window (typical weekly) | **Changelog-as-scaffolding.** Write `CHANGELOG-<date>.md`. Do NOT touch `Hermes_Architecture.md`. |
-| Delta > 500 commits OR prior anchor > 4 weeks old OR operator explicitly requests | **Full re-compile.** Re-author `references/Hermes_Architecture.md` from upstream, then write a changelog describing the new baseline. |
-| Operator says "lightweight local model only" or cron has extended time | Follow operator's directive; default to changelog-as-scaffolding unless explicitly told to re-compile. |
+| Prior anchor under one week old and a very small delta | Inline report only; patch `last_drift_review`. |
+| Moderate delta in a single window | Changelog-only: write `CHANGELOG-<date>.md`, leave the main reference untouched. |
+| Large delta, a long-unreviewed anchor, a new upstream release with architectural changes, or an explicit maintainer request | Full rebuild of [Hermes_Architecture.md](./Hermes_Architecture.md) from the official docs and upstream source, then a changelog describing the new baseline. |
 
-**Ambiguous zone clarification (post-2026-07-12):** when the prior text said "default to changelog-as-scaffolding if >500 commits or >4 weeks" AND "full re-compile only if (a) operator requests, (b) <300 commits, or (c) extended time," there was an overlapping range where both rules applied differently. The decision tree above resolves it: **for weekly cadences with 50-500 commits, always changelog-as-scaffolding**, regardless of operator hints about re-compile scope, because the SSOT was just refreshed in the most recent full re-compile (1,098 commits on 2026-07-05) and incremental churn doesn't justify re-doing it.
+### Changelog-only pattern for a large window
 
-### Large drift window — changelog-as-scaffolding (verified 2026-07-05, 1098-commit pass)
+When a window is too large to rebuild in one pass, write a dated changelog instead of a partial edit:
 
-When the drift window between the prior SSOT anchor and the current upstream HEAD exceeds what a single cron pass can re-compile (~300+ commits, multi-week windows, or "lightweight local model only" directives), do NOT attempt a full re-compile. Use the **changelog-as-scaffolding** pattern instead:
-
-1. **Anchor bounds.** Record both anchors explicitly: `git log --oneline <prior>..<current>` and the commit count. State the active Hermes version + commit + upstream HEAD.
-2. **Group deltas by area**, not by commit. Areas: config & provider routing, skills/CLI, delegation, MoA, gateway, compression/caching, memory, MCP, tools, webhooks, cron, security, web tools, models, desktop, platform adapters (WhatsApp/Telegram/Discord/Slack), provider routing/runtime. This matches the section structure of `Hermes_Architecture.md` so the next re-compile has a 1:1 merge map.
-3. **Attach source SHAs** to every delta. `b98baa303` — short SHA, descriptive label. The next re-compile uses these to pull `git show <sha>` for verification, not to trust your summary.
-4. **End with a "Action items for next full reference re-compile" list** — concrete per-section edits to make. This is the actual scaffold the next pass consumes.
-5. **Document known limitations** of the pass (e.g. docs not fetched, local Hermes itself behind upstream) so the next pass knows what gaps remain.
-6. **Bump skill frontmatter**: `version`, `last_drift_review`, `repo_commit`. Add the changelog under "Targeted quirks" with an explicit "read this before assuming any section of the main reference is current" warning.
-7. **Mirror to public repo** (`shagghiesuperstar/hermes-master-ref-maintained`). The public mirror is distribution for other agents — push the same changelog so they see the drift markers without re-deriving them.
-8. **Name the file `CHANGELOG-<YYYY-MM-DD>.md`** so a sequence of passes forms a chain. Never overwrite a prior changelog — the chain is the audit trail.
-
-Threshold heuristic: if the prior SSOT anchor is more than 4 weeks old, or the delta exceeds 500 commits, default to changelog-as-scaffolding. A full re-compile is only worth attempting in a single pass if (a) the operator explicitly requests it, (b) the drift is <300 commits, or (c) the cron has explicit extended time.
+1. Record both anchors and the commit count.
+2. Group deltas by architecture area, not by commit.
+3. Attach short SHAs to every delta so the next rebuild can run `git show <sha>` instead of trusting the summary.
+4. End with an "Action items for next full rebuild" list of concrete per-section edits.
+5. Document known limitations of the pass (docs not fetched, local install behind upstream, nothing executed).
+6. Bump the frontmatter as above and add the changelog to the index with a historical-snapshot label.
+7. Name the file `CHANGELOG-<YYYY-MM-DD>.md` so passes form a chain.
 
 ## Maintenance commands
 
-Suggested local repo probes:
+Suggested local probes:
 
 ```bash
 hermes --version
@@ -178,42 +161,42 @@ hermes config path
 hermes config check
 hermes tools list
 hermes mcp list
-python3 -m py_compile ~/.hermes/hermes-agent/run_agent.py
+python3 -m py_compile <hermes-agent-checkout>/run_agent.py
 ```
 
 Suggested docs/repo checks:
 
 ```bash
-git -C ~/.hermes/hermes-agent fetch origin main
-git -C ~/.hermes/hermes-agent log --oneline -20 origin/main
+git -C <hermes-agent-checkout> fetch origin main
+git -C <hermes-agent-checkout> log --oneline -20 origin/main
 ```
 
-If the local repo path differs, locate it before running repo commands. Do not assume `~/.hermes/hermes-agent` on other machines.
+Locate the checkout before running repo commands; its path differs between machines.
 
 ## Pitfalls
 
 - This skill is not a replacement for official docs. It is an offline reference.
 - Hermes profile isolation matters. Always run `hermes config path` before claiming which config is active.
-- **Config edits must use official Hermes CLI commands unless the operator explicitly authorizes direct file edits.**
-- **Config may not be a local file.** Upstream added a `ConfigBackend` seam: with `HERMES_CONFIG_BACKEND=remote` each profile's config is served from a config plane, `config.yaml` is neither read nor written, there is no local cache, and boot fetch **fails closed** (the process exits rather than falling back). `hermes config edit`, profile clone/rename/distribution install, `hermes backup`, `hermes import`, and snapshot restore are **refused** in remote mode; use `hermes config set`. Locked keys reject writes and report which level locks them, and a secret-shaped key accepts only a `${VAR}` reference. **Before applying any config-edit procedure, check the backend** (`hermes doctor` reports the backend and plane URL) — a `config.yaml`-based procedure silently does nothing under the remote backend. See `references/CHANGELOG-2026-11-01.md`.
-- **GitHub Copilot is no longer a core provider.** It ships as the `github-copilot` labs plugin (`hermes plugins install github-copilot`); homes already routing through `copilot`/`copilot-acp` get it auto-installed, and `gh`-CLI / Copilot-CLI logins are no longer read (`hermes auth add copilot` for device-code login).
+- Config edits must use official Hermes CLI commands unless the operator explicitly authorizes direct file edits.
+- **Config may not be a local file.** Per the 2026-11-01 snapshot ([CHANGELOG-2026-11-01.md](./CHANGELOG-2026-11-01.md)), upstream added a `ConfigBackend` seam: with `HERMES_CONFIG_BACKEND=remote` each profile's config is served from a config plane, `config.yaml` is neither read nor written, and boot fetch fails closed. Several commands (`hermes config edit`, profile clone/rename, backup/import, snapshot restore) are refused in that mode and `hermes config set` is the supported path. Confirm current behavior in the official docs, and check the active backend (`hermes doctor`) before applying any `config.yaml`-based procedure.
+- **GitHub Copilot may not be a core provider.** Per the same snapshot it ships as the `github-copilot` labs plugin (`hermes plugins install github-copilot`). Verify against the current provider docs before relying on `copilot` routing.
 - Avoid hardcoded user paths when writing reusable procedures. Use `hermes config path`, `hermes config env-path`, and profile-aware locations.
-- If the weekly review finds drift, patch the skill immediately rather than only reporting it.
-- **Local Hermes can be behind upstream.** Always probe `git rev-list --count HEAD..origin/main` at the top of a drift review. A non-zero count is normal (the local branch is often pinned to a feature branch); don't confuse "local is stale" with "drift is zero." The drift count that matters is `<prior_anchor>..<upstream>`, not `<local>..<upstream>`.
-- **Spot-verify before quoting.** Never put a commit's claims into the changelog without running `git show --stat <sha>` first. Commit messages can mislead (reverts, salvage merges, follow-up fixes). The 30-second spot-check is what catches "this commit doesn't actually do what the message says."
-- **Threshold heuristic contradictions.** Earlier versions of this skill had overlapping re-compile vs changelog conditions that conflicted for the 50-500 commit weekly range. Follow the decision tree above, not the legacy prose.
-- **When a drift window is too large to re-compile in a single pass, write a dated changelog reference (`CHANGELOG-<YYYY-MM-DD>.md`) grouped by architecture area with source SHAs, NOT a free-form report or a partial reference edit.** A partial edit is worse than no edit — it leaves the reference in a state that looks current but isn't. The changelog is the durable scaffolding for the next full re-compile; the reference stays untouched until a full re-compile consumes the scaffold. See the "Large drift window — changelog-as-scaffolding" subsection in the Drift review protocol above for the full pattern.
+- If a review finds drift, patch the skill promptly rather than only reporting it.
+- **Local Hermes can be behind upstream.** Probe `git rev-list --count HEAD..origin/main` at the top of a review. The drift count that matters is `<prior_anchor>..<upstream>`, not `<local>..<upstream>`.
+- **Spot-verify before quoting.** Never put a commit's claims into a changelog without running `git show --stat <sha>` first. Commit messages can mislead (reverts, salvage merges, follow-up fixes).
+- **Changelogs are snapshots.** Any figure in an archived changelog (commit counts, schema numbers, "N commits behind", staleness) is true only for its own date. Re-derive current figures from the docs and upstream source.
+- **Never date a changelog after the day it was written.** Dates are part of the audit trail.
 
-### Config-migration workflow pitfalls (operator-mandated, durable)
+### Config-migration workflow pitfalls
 
-- **No `sed`/`awk`/shell text tools for file edits on this macOS box.** Use Python (`pathlib`/`yaml`/`re`) or official `hermes config` CLI. Operator directive — treat as binding for this class of work.
-- **When the operator gives a numbered sequence with "do not stop / do not ask permission," execute the full sequence and verify each step.** Do not drip one action per turn; do not declare completion without readback (`hermes config check`, `hermes moa list`, active-model readback, file diff). Overclaiming completion drew repeated explicit frustration.
-- **`patch`/`write_file` refuse to edit `config.yaml`** (security guard). Fall back to Python structural edits in `execute_code`, not shell.
-- **`model.default` must be a real model slug**, never the literal `"default"`, and `model.provider` should be `openrouter` (not `moa`) for routine chat — `provider: moa` forces every turn through the council at ~4x cost, and `default: default` makes the mobile picker fall back to a stale cached label.
-- **Validate every OpenRouter slug against the live catalog** (`https://openrouter.ai/api/v1/models`) before writing it to `config.yaml` OR `model-routing.md`. The `:nitro` suffix is a routing modifier on a real base slug.
-- **A routing role in `model-routing.md` is not a runnable profile.** Only dirs with a `config.yaml` are real profiles; empty `hermes-*` stubs are kanban labels. Never report "created a profile" when only a doc row was added.
-- **When cloning a profile for a worker, rewrite the inherited `SOUL.md`** so it drops the orchestrator identity; `--no-skills` is mutually exclusive with `--clone-from`.
-- See `references/config-migration-and-provider-routing.md` for the full checklist, code snippets, and examples.
+- Prefer structured edits (Python with `pathlib`/`yaml`/`re`) or the official `hermes config` CLI over ad-hoc shell text tools when editing config files.
+- When given a numbered sequence of steps to run end to end, execute the full sequence and verify each step. Do not declare completion without readback (`hermes config check`, `hermes moa list`, active-model readback, file diff).
+- File-write tools may refuse to edit `config.yaml` (security guard). Fall back to a structured Python edit or the CLI.
+- `model.default` must be a real model slug, never the literal `"default"`; `model.provider` should be a real provider such as `openrouter` (not `moa`) for routine chat, since `provider: moa` routes every turn through the council at several times the cost.
+- Validate every OpenRouter slug against the live catalog (`https://openrouter.ai/api/v1/models`) before writing it to config or a routing doc. The `:nitro` suffix is a routing modifier on a real base slug.
+- A routing role in a routing doc is not a runnable profile. Only directories with a `config.yaml` are real profiles; empty stubs are labels. Never report "created a profile" when only a doc row was added.
+- When cloning a profile for a worker, rewrite the inherited `SOUL.md` so it drops the orchestrator identity; `--no-skills` is mutually exclusive with `--clone-from`.
+- See [config-migration-and-provider-routing.md](./config-migration-and-provider-routing.md) for the full checklist, code snippets, and examples.
 
 ## Verification
 

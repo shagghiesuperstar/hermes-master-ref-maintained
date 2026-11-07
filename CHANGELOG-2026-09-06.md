@@ -1,11 +1,13 @@
 # Hermes Architecture Reference — Drift Changelog 2026-09-06
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.21.0 (2026.8.31) — local `3ca096de5f` (on `main`, **5,224 commits behind** `origin/main` at review time; `hermes --version` also reported upstream tip `089bb328` before fetch)
 - **Upstream HEAD reviewed:** `c5594ec4b3` (origin/main as of 2026-09-06)
 - **Prior SSOT anchor (last drift review upstream HEAD):** `4f22543509` (CHANGELOG-2026-08-30)
-- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `references/Hermes_Architecture.md` last synced 2026-06-21
+- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `Hermes_Architecture.md` last synced 2026-06-21
 - **Commits between prior upstream and current upstream:** **5,800** (~87 feat, ~974 fix, ~3,387 refactor, ~55 simplify/compat, rest test/chore/docs/perf/style/fmt; **1** explicit whitespace revert)
 - **Window:** 2026-08-30 → 2026-09-06 (~1 week)
 - **Releases in window:** **`v0.21.0` (2026.8.31 / tag `v2026.8.31`)**
@@ -234,6 +236,6 @@ Top scopes by count (illustrative of where the week went):
 
 ## Decision
 
-- **Changelog-as-scaffolding:** YES (`references/CHANGELOG-2026-09-06.md`)
+- **Changelog-as-scaffolding:** YES (`CHANGELOG-2026-09-06.md`)
 - **Full `Hermes_Architecture.md` re-compile:** NO (threshold + lightweight directive)
 - **Skill frontmatter bump:** version `1.11.0` → `1.12.0`; `last_drift_review: 2026-09-06`; `repo_commit` points at prior full SSOT anchor with new upstream tip + pending count

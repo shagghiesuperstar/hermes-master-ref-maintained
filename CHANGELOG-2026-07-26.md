@@ -1,12 +1,14 @@
 # Hermes Architecture Reference — Drift Changelog 2026-07-26
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.18.2 (2026.7.7.2) — local `36f2a966c` (on `main`, +1 carried fmt commit)
 - **Upstream HEAD reviewed:** `65b73eb1e` (origin/main)
 - **Prior SSOT anchor (last drift review):** `7b5ba2054` (CHANGELOG-2026-07-19)
 - **Prior upstream HEAD (prior review):** `7b5ba2054`
-- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `references/Hermes_Architecture.md` last synced 2026-06-21
+- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `Hermes_Architecture.md` last synced 2026-06-21
 - **Commits between prior upstream and current upstream:** **1,074** (124 feat, 563 fix, 109 test, 72 chore, 38 refactor, 18 perf, ~150 misc)
 - **Window:** 2026-07-19 → 2026-07-26 (~1 week)
 - **Local vs upstream:** local is **3 commits behind** `origin/main` (effectively current on `main`; the only deltas are post-merge fmt fixes)
@@ -313,7 +315,7 @@
 
 ### Reverts
 
-- **`revert(memory): drop the provider actions extension point.`** `f000fbe5c` — no bundled provider declared actions, and the motivating request (openviking, #56309) needs dynamic select options rather than actions. Removing the unconsumed POST dispatch surface keeps the config panel focused; the extension point can return as its own PR with its first real consumer. **Note for the next re-compile:** remove any reference to `ProviderAction` on `ProviderConfigSchema` and the `POST /api/memory/providers/{name}/actions/{action}` dispatch surface from `references/Hermes_Architecture.md`.
+- **`revert(memory): drop the provider actions extension point.`** `f000fbe5c` — no bundled provider declared actions, and the motivating request (openviking, #56309) needs dynamic select options rather than actions. Removing the unconsumed POST dispatch surface keeps the config panel focused; the extension point can return as its own PR with its first real consumer. **Note for the next re-compile:** remove any reference to `ProviderAction` on `ProviderConfigSchema` and the `POST /api/memory/providers/{name}/actions/{action}` dispatch surface from `Hermes_Architecture.md`.
 - **`Revert "fix(tests): force manual approval mode in E2E blocking tests".`** `6ce160a5a` — reverts `55624e10b`. Test isolation didn't play well with the rest of the suite.
 - **`fix(desktop): model picker reverts in existing threads (#65777).`** `659d1123c` — NOT actually a revert of a feature; a fix to the desktop model picker where stale closures in `selectModel`/`use-model-controls` prevented picker selections from persisting in existing threads (because `activeSessionId` was captured as a closure prop but the actions bag mutated in place). Drop the prop; read `$activeSessionId.get()` live from the store.
 
@@ -346,7 +348,7 @@ Active salvage lane in this window:
 
 ## Action items for next full reference re-compile
 
-When the next full re-compile of `references/Hermes_Architecture.md` lands, these sections need updating (in addition to the 11 carryover items from CHANGELOG-2026-07-19.md):
+When the next full re-compile of `Hermes_Architecture.md` lands, these sections need updating (in addition to the 11 carryover items from CHANGELOG-2026-07-19.md):
 
 1. **Schema versions**: bump **schema_version 22** in the state.db section, document the new `task` PK dimension on `session_model_usage`, and note the table-rebuild migration approach (SQLite can't alter PKs in place).
 2. **Provider routing section**: add **Upstage Solar**, **DeepInfra**, **Kimi K3** (from `75ca29fb2`/`311a5b0a5`), **Kimi retired (kimi-k2.x)**, **Fireworks pricing snapshot**.

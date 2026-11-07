@@ -1,11 +1,13 @@
-# CHANGELOG-2026-11-10 — Weekly drift review
+# CHANGELOG-2026-10-18 — Weekly drift review
+
+> **Date correction (2026-11-06).** This file was originally mis-dated: it was named `CHANGELOG-2026-11-10.md`, a date in the future relative to 2026-11-06. The window it describes was reviewed on 2026-10-18 (upstream anchor `22063fc099`, dated 2026-10-18). The file was renamed and the dates inside corrected during the 2026-11-06 sync. It is a historical snapshot, not current truth; see the corrections in [CHANGELOG-2026-11-01.md](CHANGELOG-2026-11-01.md) and the current state in [Hermes_Architecture.md](Hermes_Architecture.md).
 
 ## Anchors
 
-- **Local Hermes commit:** `d923a5eb487a` (M5 ss profile, last local build)
+- **Local Hermes commit:** `d923a5eb487a` (example profile, last local build)
 - **Upstream HEAD:** `22063fc099` (NousResearch/hermes-agent main)
 - **Local-behind-upstream:** 1,692 commits — local install is pinned to a prior release branch; normal state
-- **Prior SSOT anchor in skill:** `4f22543509` (2026-10-14, ~27 weeks stale)
+- **Prior SSOT anchor in skill:** `4f22543509` (2026-10-14, ~27 weeks stale [figure from the mis-dated file; superseded by the 2026-11-01 corrections])
 - **Delta since prior anchor → upstream HEAD:** **29,791 commits** — largest drift window encountered
 
 ## Summary
@@ -99,7 +101,7 @@ No major reverts equivalent to the schema v30 → v31 boundary that appeared in 
 ## Known limitations of this pass
 
 1. **Only first 200 commits spot-checked** — delta is too large (29,791) to scan exhaustively in a single cron run with lightweight model.
-2. **Docs not fetched** — https://hermes-agent.nousresearch.com/docs/ homepage is current (verified 2026-11-10), but individual feature docs (Skills, MCP, providers, CLI) were not re-scanned.
+2. **Docs not fetched** — https://hermes-agent.nousresearch.com/docs/ homepage is current (verified 2026-10-18 [date corrected 2026-11-06]), but individual feature docs (Skills, MCP, providers, CLI) were not re-scanned.
 3. **Local Hermes not updated** — analysis is based on upstream HEAD only; actual local install (d923a5eb) may behave differently.
 4. **No verification of breaking changes** — only first-pass categorization; actual operator-facing impact unknown.
 

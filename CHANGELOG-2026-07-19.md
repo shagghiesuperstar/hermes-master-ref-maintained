@@ -1,10 +1,12 @@
 # Hermes Architecture Reference — Drift Changelog 2026-07-19
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.18.2 (2026.7.7.2) — local `570141a39` (+1 carried commit on `fix/cron-update-pin-snapshots`)
 - **Upstream HEAD reviewed:** `7b5ba2054` (origin/main)
-- **Prior SSOT anchor (last drift review):** `cdcbc3a31` (v2026.7.1) — `references/Hermes_Architecture.md` last synced 2026-06-21
+- **Prior SSOT anchor (last drift review):** `cdcbc3a31` (v2026.7.1) — `Hermes_Architecture.md` last synced 2026-06-21
 - **Prior upstream HEAD (last drift review):** `aaeba213d` (CHANGELOG-2026-07-12)
 - **Commits between prior upstream and current upstream:** **502** (~38 feat, ~270 fix, ~12 refactor, ~35 test, remainder chore/salvage/docs/merge)
 - **Window:** 2026-07-12 → 2026-07-19 (~1 week)
@@ -112,7 +114,7 @@
 
 ## Action items for next full reference re-compile
 
-When the next full re-compile of `references/Hermes_Architecture.md` lands, these sections need updating:
+When the next full re-compile of `Hermes_Architecture.md` lands, these sections need updating:
 
 1. **Configuration docs (DEFAULT_CONFIG)**: Update `approvals.mode` default from `on` to `smart`.
 2. **Provider routing section**: Add Fireworks AI as preferred provider entry. Add grok-4.5 to xAI subsection. Update Tencent Hy3 from Preview to GA.

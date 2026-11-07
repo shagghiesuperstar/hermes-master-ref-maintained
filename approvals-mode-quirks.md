@@ -41,7 +41,7 @@ how the profile is activated.
 
 | Path | Result |
 |---|---|
-| `patch` tool (`~/.hermes/profiles/ss/config.yaml`) | ❌ "Refusing to write to Hermes config file" security guard |
+| `patch` tool (`~/.hermes/profiles/<profile>/config.yaml`) | ❌ "Refusing to write to Hermes config file" security guard |
 | `write_file` tool (same path) | ❌ same guard, same error |
 | `hermes config set ...` | ❌ writes boolean False due to YAML coercion |
 | `terminal cp` of a corrected copy | ✅ works |
@@ -50,13 +50,13 @@ how the profile is activated.
 
 ```bash
 # 1. Back up (mandatory)
-cp ~/.hermes/profiles/ss/config.yaml \
-   ~/.hermes/profiles/ss/config.yaml.bak.pre-approvals-off-$(date +%Y%m%d-%H%M%S)
+cp ~/.hermes/profiles/<profile>/config.yaml \
+   ~/.hermes/profiles/<profile>/config.yaml.bak.pre-approvals-off-$(date +%Y%m%d-%H%M%S)
 
 # 2. Read + surgically fix mode in-memory
 python3 - <<'PY'
 import pathlib, shutil
-p = pathlib.Path('~/.hermes/profiles/ss/config.yaml')
+p = pathlib.Path('~/.hermes/profiles/<profile>/config.yaml')
 bak = pathlib.Path('~/.hermes/config.yaml.bak.pre-approvals-off-$(date +%Y%m%d-%H%M%S)')
 shutil.copy(p, bak.parent / (p.name + '.pre-fix'))
 src = p.read_text()
@@ -69,7 +69,7 @@ PY
 # 3. Verify YAML parses and mode is the string 'off'
 python3 -c "
 import yaml
-d = yaml.safe_load(open('~/.hermes/profiles/ss/config.yaml'))
+d = yaml.safe_load(open('~/.hermes/profiles/<profile>/config.yaml'))
 m = d['approvals']['mode']
 assert m == 'off' and isinstance(m, str), f'mode is {m!r}'
 print('OK: approvals.mode =', repr(m))
@@ -98,15 +98,15 @@ Both bugs (#47515 YAML coercion and #45563 patch/write_file guard) are
 **still OPEN** on `NousResearch/hermes-agent`. No fix has been merged on
 main. PRs in flight as of this drift check:
 
-| PR | Author | Status | What it fixes |
-|---|---|---|---|
-| #47515 (issue) | liuhao1024 | OPEN | YAML coercion in `set_config_value` (skip bool coercion for string-typed keys) |
-| #47519 (PR) | liuhao1024 | OPEN | Same — primary candidate |
-| #47607 (PR) | kyssta-exe | OPEN | Same — competing PR |
-| #47618 (PR) | vanthinh6886 | OPEN | Same — competing PR |
-| #45563 (issue) | chenyuan35 | OPEN | patch/write_file guards block Hermes config edits |
-| #45692 (PR) | lEWFkRAD | OPEN | Routes Hermes config writes through the `approvals` system |
-| #54469 (PR) | teknium1 | OPEN | Fails-safe on unknown `approvals.mode` values (defaults to `manual`) |
+| PR | Status | What it fixes |
+|---|---|---|
+| #47515 (issue) | OPEN | YAML coercion in `set_config_value` (skip bool coercion for string-typed keys) |
+| #47519 (PR) | OPEN | Same — primary candidate |
+| #47607 (PR) | OPEN | Same — competing PR |
+| #47618 (PR) | OPEN | Same — competing PR |
+| #45563 (issue) | OPEN | patch/write_file guards block Hermes config edits |
+| #45692 (PR) | OPEN | Routes Hermes config writes through the `approvals` system |
+| #54469 (PR) | OPEN | Fails-safe on unknown `approvals.mode` values (defaults to `manual`) |
 
 Reprobe before relying on a fix:
 

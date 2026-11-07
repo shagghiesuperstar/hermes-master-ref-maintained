@@ -1,11 +1,13 @@
 # Hermes Architecture Reference — Drift Changelog 2026-08-30
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.20.6 (2026.8.27) — local `a9e72f1b58` (on `main`, **332 commits behind** `origin/main`)
 - **Upstream HEAD reviewed:** `4f22543509` (origin/main as of 2026-08-30)
 - **Prior SSOT anchor (last drift review upstream HEAD):** `f293e7206` (CHANGELOG-2026-08-23)
-- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `references/Hermes_Architecture.md` last synced 2026-06-21
+- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `Hermes_Architecture.md` last synced 2026-06-21
 - **Commits between prior upstream and current upstream:** **1,649** (~152 feat, ~967 fix, ~74 refactor, rest chore/test/docs/style/fmt; **7** reverts)
 - **Window:** 2026-08-23 → 2026-08-30 (~1 week)
 - **Releases in window:** **`v0.20.6` (2026.8.27)**
@@ -186,6 +188,6 @@ Top conventional scopes: `fix(desktop)` 292, `fix(gateway)` 51, `fix(cron)` 47, 
 
 ## Files updated this pass
 
-- `references/CHANGELOG-2026-08-30.md` (this file)
+- `CHANGELOG-2026-08-30.md` (this file)
 - `SKILL.md` frontmatter + Targeted quirks pointer (version → 1.11.0)
-- Public mirror: `shagghiesuperstar/hermes-master-ref-maintained` (same changelog + skill bump)
+- Public mirror: the public mirror repo (same changelog + skill bump)

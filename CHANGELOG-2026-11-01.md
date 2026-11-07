@@ -1,5 +1,7 @@
 # Hermes Architecture Drift Review — 2026-11-01
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Anchors (canonical)
 
 | Fact | Value |
@@ -14,18 +16,18 @@
 | **SSOT body last updated** | **2026-06-21** — the body itself is **133 days stale** (48,592 commits behind upstream) |
 | Review window type | **Changelog-as-scaffolding (lightweight local model directive)** |
 
-> **Date-naming correction.** The prior two changelog files were misnamed relative to their content. `CHANGELOG-2026-11-24.md` was written on **2026-10-25** (mtime) and its upstream anchor `d050956633` is dated **2026-10-25**; `CHANGELOG-2026-11-10.md` was written **2026-10-18** with anchor `22063fc099` (2026-10-18). Both files were named for a date ~1 month *after* the window they describe. This file is named for its true date (2026-11-01). The chain now reads out of chronological order by filename; **use the anchor SHAs and the "Anchors" table, not the filename dates, to order the chain.**
+> **Date-naming correction.** The prior two changelog files were misnamed relative to their content. The file originally named `CHANGELOG-2026-11-24.md` was written on **2026-10-25** (mtime) and its upstream anchor `d050956633` is dated **2026-10-25**; the file originally named `CHANGELOG-2026-11-10.md` was written **2026-10-18** with anchor `22063fc099` (2026-10-18). Both files were named for a date ~1 month *after* the window they describe. This file is named for its true date (2026-11-01). **[Update 2026-11-06: those two files have since been renamed to [CHANGELOG-2026-10-25.md](CHANGELOG-2026-10-25.md) and [CHANGELOG-2026-10-18.md](CHANGELOG-2026-10-18.md) and their internal dates corrected. The references to the old names below are kept as written at the time, with the current names added in brackets.]**
 
 ## Corrections to prior passes (verified this run)
 
 | Prior claim | Source | Verified truth |
 |---|---|---|
-| "No schema bump (v31 unchanged)" | SKILL.md pointer for `CHANGELOG-2026-11-24.md` | **FALSE.** `SCHEMA_VERSION` is **32** upstream (`hermes_state_common.py:289`). The 31→32 bump landed in `1eda335ae0` (2026-10-17, "catch a lagging state.db up once on browse instead of 503"). That commit is an ancestor of `d050956633` — it was inside the *prior* window and was missed. `FTS_STORAGE_VERSION` is **3**. |
-| "Reference is 60 days stale" | `CHANGELOG-2026-11-24.md` | Understated. The SSOT **body** (`Hermes_Architecture.md`) was last updated 2026-06-21 and has never been re-compiled since — it is **133 days / 48,592 commits** stale. The 60-day figure measured from the `4f22543509` anchor (2026-08-30), not from the body's actual last sync. |
-| "Reference is 27 weeks stale" | `CHANGELOG-2026-11-10.md` | Understated for the same reason. From the body's real last sync (2026-06-21) it was 119 days ≈ 17 weeks. |
-| "Prior SSOT anchor `4f22543509` (2026-09-25, v0.21.2)" | `CHANGELOG-2026-11-24.md` | Anchor commit date is **2026-08-30**; its `__version__` is **0.20.6** (`git describe` → `v2026.8.27`). Not 2026-09-25, not v0.21.2. |
-| Type breakdown "fix 13,605 (41.8%) / refactor 4,668 / test 2,934 / feat 1,763 / chore 1,592 / docs 707 / perf 196" | `CHANGELOG-2026-11-24.md` | Not reproducible. Actual over `4f22543509..d050956633`: fix **14,849**, refactor **4,757**, test **3,698**, chore **2,430**, feat **1,918**, docs **885**, catalog **400**, ci **249**, perf **197**. |
-| "Total delta since prior SSOT: 32,581 commits (~60 days elapsed)" | `CHANGELOG-2026-11-24.md` | Commit count **32,581 is correct** for `4f22543509..d050956633`. The "60 days" is measured from the anchor commit date; the elapsed time to the *body's* last sync is 56 days. |
+| "No schema bump (v31 unchanged)" | SKILL.md pointer for `CHANGELOG-2026-11-24.md` [now `CHANGELOG-2026-10-25.md`] | **FALSE.** `SCHEMA_VERSION` is **32** upstream (`hermes_state_common.py:289`). The 31→32 bump landed in `1eda335ae0` (2026-10-17, "catch a lagging state.db up once on browse instead of 503"). That commit is an ancestor of `d050956633` — it was inside the *prior* window and was missed. `FTS_STORAGE_VERSION` is **3**. |
+| "Reference is 60 days stale" | `CHANGELOG-2026-11-24.md` [now `CHANGELOG-2026-10-25.md`] | Understated. The SSOT **body** (`Hermes_Architecture.md`) was last updated 2026-06-21 and has never been re-compiled since — it is **133 days / 48,592 commits** stale. The 60-day figure measured from the `4f22543509` anchor (2026-08-30), not from the body's actual last sync. |
+| "Reference is 27 weeks stale" | `CHANGELOG-2026-11-10.md` [now `CHANGELOG-2026-10-18.md`] | Understated for the same reason. From the body's real last sync (2026-06-21) it was 119 days ≈ 17 weeks. |
+| "Prior SSOT anchor `4f22543509` (2026-09-25, v0.21.2)" | `CHANGELOG-2026-11-24.md` [now `CHANGELOG-2026-10-25.md`] | Anchor commit date is **2026-08-30**; its `__version__` is **0.20.6** (`git describe` → `v2026.8.27`). Not 2026-09-25, not v0.21.2. |
+| Type breakdown "fix 13,605 (41.8%) / refactor 4,668 / test 2,934 / feat 1,763 / chore 1,592 / docs 707 / perf 196" | `CHANGELOG-2026-11-24.md` [now `CHANGELOG-2026-10-25.md`] | Not reproducible. Actual over `4f22543509..d050956633`: fix **14,849**, refactor **4,757**, test **3,698**, chore **2,430**, feat **1,918**, docs **885**, catalog **400**, ci **249**, perf **197**. |
+| "Total delta since prior SSOT: 32,581 commits (~60 days elapsed)" | `CHANGELOG-2026-11-24.md` [now `CHANGELOG-2026-10-25.md`] | Commit count **32,581 is correct** for `4f22543509..d050956633`. The "60 days" is measured from the anchor commit date; the elapsed time to the *body's* last sync is 56 days. |
 
 **Root cause of the recurring miss:** the drift protocol anchors on the `repo_commit` frontmatter value (a *review* anchor), but the SSOT **body** has a separate, older last-sync date (2026-06-21). Measuring "staleness" from the review anchor understates it by ~2 months. The runbook's §1 anchor probes should read the body's own header date. See "Action items" item 1.
 
@@ -149,7 +151,7 @@ The single largest architectural addition in this window. Config is no longer ne
 
 Ordered by blast radius. The SSOT body is 133 days stale, so these accumulate.
 
-1. **Fix the staleness measurement first** (runbook + SKILL.md). Add a body-provenance probe to the runbook: read the `Compiled:`/`Updated:` line from `references/Hermes_Architecture.md` and report body age separately from anchor age. Two prior passes under-reported staleness by ~2 months because they anchored on the review commit instead of the body's own last-sync date.
+1. **Fix the staleness measurement first** (runbook + SKILL.md). Add a body-provenance probe to the runbook: read the `Compiled:`/`Updated:` line from `Hermes_Architecture.md` and report body age separately from anchor age. Two prior passes under-reported staleness by ~2 months because they anchored on the review commit instead of the body's own last-sync date.
 2. **New section: "Configuration backend seam"** — `ConfigBackend` abstraction, `HERMES_CONFIG_BACKEND=remote` + `HERMES_CONFIG_INSTANCE_ID` + `HERMES_CONFIG_REMOTE_URL`, boot fetch fail-closed, 5-minute ETag poll, CAS key-level writes with one conflict retry, locked keys, secret-literal rejection, in-memory migrations, managed scope ignored in remote mode, and the refused-commands list (`config edit`, profile clone/rename/distribution, backup/import/snapshot restore). Reference the upstream docs page.
 3. **Provider table fix** — remove `copilot` from "Supported Providers" in core; add a "GitHub Copilot (labs plugin)" note (`hermes plugins install github-copilot`, auto-install for existing homes, `hermes auth add copilot`, and that `gh`-CLI/Copilot-CLI logins are no longer read).
 4. **New subsection: "Labs plugins / left-core migration"** — `LEFT_CORE` table, the migrate-once-per-home rule, the failure backoff (skip an hour, doubling to a week), unattended dependency consent, and kept migration notices.
@@ -169,8 +171,8 @@ Ordered by blast radius. The SSOT body is 133 days stale, so these accumulate.
 
 ## Known limitations of this pass
 
-1. **No SSOT re-compile** — per the operator directive ("run with lightweight local model only") and the skill's decision tree, this is a changelog-as-scaffolding pass. `references/Hermes_Architecture.md` was **not** modified. Its body is 133 days / 48,592 commits stale and the re-compile remains the top outstanding item.
-2. **Prior-changelog corrections were made here, not by editing the prior files** — `CHANGELOG-2026-11-24.md` and `CHANGELOG-2026-11-10.md` still carry the false "v31 unchanged" and understated-staleness claims. The protocol forbids overwriting a prior changelog (the chain is the audit trail), so the corrections are recorded in this file's "Corrections to prior passes" table and in the SKILL.md pointer for the affected entries.
+1. **No SSOT re-compile** — per the operator directive ("run with lightweight local model only") and the skill's decision tree, this is a changelog-as-scaffolding pass. `Hermes_Architecture.md` was **not** modified. Its body is 133 days / 48,592 commits stale and the re-compile remains the top outstanding item.
+2. **Prior-changelog corrections were made here, not by editing the prior files** — `CHANGELOG-2026-11-24.md` [now `CHANGELOG-2026-10-25.md`] and `CHANGELOG-2026-11-10.md` [now `CHANGELOG-2026-10-18.md`] still carry the false "v31 unchanged" and understated-staleness claims. The protocol forbids overwriting a prior changelog (the chain is the audit trail), so the corrections are recorded in this file's "Corrections to prior passes" table and in the SKILL.md pointer for the affected entries.
 3. **Docs coverage** — the docs landing page, `llms.txt`, the configuration reference, the Remote Config page, the Event Hooks page, and the CLI/slash-command references were read. The full `llms-full.txt` (~1.8 MB) was not ingested; per-page reads were targeted instead.
 4. **High-velocity fix cluster** — 1,163 fix commits in 7 days. Listing them individually is impractical; bucketing was used.
 5. **Local Hermes is behind upstream** — local is v0.22.5 (`bf0203a794`, 2026-10-22), 3,226 commits behind `c7c7e0fa92`. All claims are about upstream, not the local install.
@@ -210,7 +212,7 @@ Anchor arithmetic re-verified independently this run: `4f22543509..d050956633` =
 
 ---
 
-**Prepared by:** ss (cron drift-review pass)
+**Prepared by:** cron drift-review pass
 **Date:** 2026-11-01
 **Status:** Changelog-as-scaffolding; SSOT body untouched per operator directive
-**Next action:** Mirror to `shagghiesuperstar/hermes-master-ref-maintained`; then schedule the full re-compile
+**Next action:** Mirror to the public mirror repo; then schedule the full re-compile

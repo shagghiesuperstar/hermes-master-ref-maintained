@@ -1,5 +1,7 @@
 # CHANGELOG 2026-10-14 — Hermes Architecture Reference Drift Review
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Anchors
 
 - **Local Hermes:** v0.22.0 (2026.9.24) @ e06df9c2ea
@@ -68,7 +70,7 @@ Upstream has advanced 3,852 commits in the past 10 days (since the last drift re
 
 ## Action Items for Next Full Reference Re-compile
 
-When the full re-compile of `references/Hermes_Architecture.md` is undertaken (likely within 1-2 weeks), incorporate these concrete edits:
+When the full re-compile of `Hermes_Architecture.md` is undertaken (likely within 1-2 weeks), incorporate these concrete edits:
 
 1. **Configuration & provider routing:**
    - Document per-model capability metadata in plugin system
@@ -137,6 +139,6 @@ No data loss or schema corruption; all reverts are feature regressions caught po
 
 ## Conclusion
 
-Reference SSOT (`references/Hermes_Architecture.md`) remains **untouched per skill protocol**. This changelog is the durable record and scaffold for the next full re-compile. Operator should expect a full reference refresh within 1-2 weeks when upstream stabilizes or a dedicated re-compile slot opens.
+Reference SSOT (`Hermes_Architecture.md`) remains **untouched per skill protocol**. This changelog is the durable record and scaffold for the next full re-compile. Operator should expect a full reference refresh within 1-2 weeks when upstream stabilizes or a dedicated re-compile slot opens.
 
 Next review scheduled: **2026-10-21** (weekly cadence).
