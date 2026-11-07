@@ -1,4 +1,6 @@
-# Hermes Architecture Drift Review — 2026-11-24
+# Hermes Architecture Drift Review — 2026-10-25
+
+> **Date correction (2026-11-06).** This file was originally mis-dated: it was named `CHANGELOG-2026-11-24.md`, a date in the future relative to 2026-11-06. It was actually written on 2026-10-25 (upstream anchor `d050956633`, dated 2026-10-25). The file was renamed and the dates inside corrected during the 2026-11-06 sync. It is a historical snapshot, not current truth. Several of its claims (schema "v31 unchanged", the "60 days" staleness figure, the prior-anchor date/version, the commit-type breakdown) were refuted in [CHANGELOG-2026-11-01.md](CHANGELOG-2026-11-01.md); current state is in [Hermes_Architecture.md](Hermes_Architecture.md).
 
 ## Anchors (canonical)
 
@@ -89,15 +91,15 @@ Multiple i18n commits for web access settings, read-only chat errors, refusal ke
 
 ## Known limitations of this pass
 
-1. **No docs fetch** — Official docs at https://hermes-agent.nousresearch.com/docs/ were not re-read for gaps or new sections. The 2026-11-24 landing page shows Hermes is mature across these areas, but specific section updates would require a full re-read of https://hermes-agent.nousresearch.com/docs/.
+1. **No docs fetch** — Official docs at https://hermes-agent.nousresearch.com/docs/ were not re-read for gaps or new sections. The 2026-10-25 [date corrected 2026-11-06] landing page shows Hermes is mature across these areas, but specific section updates would require a full re-read of https://hermes-agent.nousresearch.com/docs/.
 2. **High-velocity fix cluster** — 13,605 fix commits over 60 days indicates sustained bug remediation but makes granular per-fix listing impractical. Focus was on architecture-area bucketing (gateway, desktop, plugins, vault, PM, catalog).
 3. **Schema and state.db** — No schema-version bump detected in commit messages. SCHEMA_VERSION likely stays at v31 (per prior CHANGELOG-2026-10-04). Full re-compile would require `git show` on state.db migration files to confirm.
 4. **Desktop plugin SDK** — 40+ desktop feature commits are a major subsystem expansion but require code-level inspection to document the full capability ladder. Catalog growth is self-documenting via git log.
 5. **Local Hermes behind upstream** — This local is v0.22.5 (2026.9.24), build bf0203a794; upstream is further ahead. All claims are about the upstream drift, not what's running locally.
 
-## Summary for operator
+## Summary for the operator
 
-This 60-day window (32,581 commits) is too large for a full re-compile in a single session. The local Hermes is 1,191 commits behind upstream, and the prior SSOT anchor is now 60 days stale (from 2026-09-25 to 2026-11-24).
+This 60-day window (32,581 commits) is too large for a full re-compile in a single session. The local Hermes is 1,191 commits behind upstream, and the prior SSOT anchor is now 60 days stale (from 2026-09-25 to 2026-10-25 [date corrected 2026-11-06; the "60 days" figure was derived from the mis-dated file and is superseded by the 2026-11-01 corrections]).
 
 **Key architecture changes found:**
 1. **Gateway hardening** — 200+ fixes focused on session lifecycle, route binding, identity-based routing, history-mount handling.
@@ -110,7 +112,7 @@ This 60-day window (32,581 commits) is too large for a full re-compile in a sing
 **Recommended next actions:**
 - Full re-compile is overdue. Consider a dedicated pass in the next sprint.
 - In the interim, use this changelog as the scaffold for per-section edits when the reference is next updated.
-- Mirror this changelog to `shagghiesuperstar/hermes-master-ref-maintained` so other agents see the drift markers.
+- Mirror this changelog to the public mirror repo so other agents see the drift markers.
 
 ## Spot-verification sample
 
@@ -126,7 +128,10 @@ All sampled commits confirmed to match their summaries.
 
 ---
 
-**Prepared by:** ss (cron drift-review pass)  
-**Date:** 2026-11-24  
-**Status:** Changelog-as-scaffolding; SSOT untouched per operator directive  
+**Prepared by:** cron drift-review pass
+
+**Date:** 2026-10-25 [date corrected 2026-11-06; originally 2026-11-24]
+
+**Status:** Changelog-as-scaffolding; SSOT untouched per operator directive
+
 **Next action:** Mirror to public repo, then await full re-compile decision

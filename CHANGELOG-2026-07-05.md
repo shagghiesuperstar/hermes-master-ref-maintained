@@ -1,12 +1,14 @@
 # Hermes Architecture Reference — Drift Changelog 2026-07-05
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.18.0 (2026.7.1) — local 61e4a5f9
 - **Upstream HEAD reviewed:** `5b04a024a` (v2026.7.1, origin/main)
-- **Prior local SSOT anchor:** `7cfa2fa1` (v0.17.0) — `references/Hermes_Architecture.md` last_synced 2026-06-21
+- **Prior local SSOT anchor:** `7cfa2fa1` (v0.17.0) — `Hermes_Architecture.md` last_synced 2026-06-21
 - **Commits between anchors:** **1,098** (116 feat, 592 fix, 100+ refactor; remainder tests/chore/docs)
-- **Public mirror:** `shagghiesuperstar/hermes-master-ref-maintained` synced identically with local SSOT (commit `563803c`, "Weekly drift sync: 2026-06-21 upstream changes")
+- **Public mirror:** the public mirror repo synced identically with local SSOT (commit `563803c`, "Weekly drift sync: 2026-06-21 upstream changes")
 - **Live `hermes config check`:** clean (config v32→33 update available only)
 - **Methodology:** lightweight-local model + targeted git-log review + spot-checks on architecture-relevant areas. The 116KB reference is not a full rewrite candidate in a single cron pass; this changelog captures the deltas a future re-compile must incorporate, with source SHAs for verification.
 
@@ -172,7 +174,7 @@
 
 ## Action items for next full reference re-compile
 
-1. Run `hermes config migrate` on local + M4 + Trinity to land v33 keys before the next reference re-compile.
+1. Run `hermes config migrate` on the local host and any other hosts to land v33 keys before the next reference re-compile.
 2. The reference needs a new section on `config.channel_overrides`, `config.extra_headers`, and the persisted `sessions.json` model_override schema.
 3. MoA section needs to document the `fanout: user_turn` preset key.
 4. Delegation section needs to remove `toolsets` from the documented `delegate_task()` signature.
@@ -190,7 +192,7 @@
 
 ```bash
 hermes --version                       # v0.18.0 (2026.7.1) — local 61e4a5f9, upstream 10423297
-hermes config path                     # ~/.hermes/profiles/ss/config.yaml
+hermes config path                     # ~/.hermes/profiles/<profile>/config.yaml
 hermes config check                    # clean (v32→33 update available)
 git -C ~/.hermes/hermes-agent log --oneline 7cfa2fa1..origin/main | wc -l   # 1098
 git -C ~/.hermes/hermes-agent rev-parse origin/main                         # 5b04a024a
@@ -200,14 +202,14 @@ diff -q <local> <public-mirror>                                             # id
 ## Files updated this pass
 
 - `SKILL.md` — version bump 1.3.0 → 1.4.0; `last_drift_review` 2026-06-30 → 2026-07-05; `repo_commit` updated.
-- `references/CHANGELOG-2026-07-05.md` — NEW. This file. Captures the deltas above; feeds the next full re-compile.
-- `references/Hermes_Architecture.md` — **NOT modified this pass** (1098 commits is too large for a single cron window; changelog is the durable record of what must be merged in).
-- `references/approvals-mode-quirks.md` — unchanged (still valid as of 2026-06-28).
-- `references/citation-verification.md` — unchanged.
-- `references/config-migration-and-provider-routing.md` — unchanged (no operator-facing changes invalidated it).
+- `CHANGELOG-2026-07-05.md` — NEW. This file. Captures the deltas above; feeds the next full re-compile.
+- `Hermes_Architecture.md` — **NOT modified this pass** (1098 commits is too large for a single cron window; changelog is the durable record of what must be merged in).
+- `approvals-mode-quirks.md` — unchanged (still valid as of 2026-06-28).
+- `citation-verification.md` — unchanged.
+- `config-migration-and-provider-routing.md` — unchanged (no operator-facing changes invalidated it).
 
 ## Public mirror
 
-- Repo: `https://github.com/shagghiesuperstar/hermes-master-ref-maintained`
+- Repo: this repository (the public mirror; the historical push instructions below refer to it)
 - Action: push the new `CHANGELOG-2026-07-05.md` and the patched `SKILL.md` so other Hermes agents can pull the changelog on their next drift pass.
 - Prior mirror commit: `563803c` (2026-06-21 sync). Next: new commit "Drift sync 2026-07-05 — v0.18.0 changelog + skill bump" with both files.

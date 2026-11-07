@@ -1,11 +1,13 @@
 # Hermes Architecture Reference — Drift Changelog 2026-08-23
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.20.5 (2026.8.19) — local `fcbd1076a` (on `main`, **310 commits behind** `origin/main`)
 - **Upstream HEAD reviewed:** `f293e7206` (origin/main as of 2026-08-23)
 - **Prior SSOT anchor (last drift review upstream HEAD):** `7095e23eb` (CHANGELOG-2026-08-16)
-- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `references/Hermes_Architecture.md` last synced 2026-06-21
+- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `Hermes_Architecture.md` last synced 2026-06-21
 - **Commits between prior upstream and current upstream:** **1,540** (~244 feat, ~739 fix, rest chore/test/refactor/docs/ci/style; **11** reverts, mostly CI cache-bust noise + 2 agent reverts)
 - **Window:** 2026-08-16 → 2026-08-23 (~1 week)
 - **Releases in window:** `v0.20.2` (2026.8.16) → `v0.20.3` (2026.8.16.2) → `v0.20.4` (2026.8.18) → **`v0.20.5` (2026.8.19)**
@@ -210,11 +212,11 @@ Official docs now foreground **Bot Mode**, `hermes peer`, `hermes project`, `her
 - Spot-verified ~30 commits; desktop UI churn summarized, not line-audited.
 - Local install is on v0.20.5 / `fcbd1076a` (310 behind tip); behavior claims for post-local commits are from git+docs, not runtime probes on tip.
 - Official docs sampled (home, CLI, configuration) — not full docs crawl.
-- Public mirror layout is flat (root-level CHANGELOG/SKILL/Architecture), not `references/` — sync matches existing mirror convention.
+- Public mirror layout is flat (root-level CHANGELOG/SKILL/Architecture files) — sync matches existing mirror convention.
 
 ## Files updated this pass
 
-- Local skill: `references/CHANGELOG-2026-08-23.md` (new)
+- Local skill: [CHANGELOG-2026-08-23.md](CHANGELOG-2026-08-23.md) (new)
 - Local skill: `SKILL.md` frontmatter + Targeted quirks pointer (version 1.9.0 → 1.10.0)
-- Public mirror: `shagghiesuperstar/hermes-master-ref-maintained` — same changelog + SKILL.md
-- `references/Hermes_Architecture.md`: **untouched** (changelog-as-scaffolding)
+- Public mirror: the public mirror repo — same changelog + SKILL.md
+- `Hermes_Architecture.md`: **untouched** (changelog-as-scaffolding)

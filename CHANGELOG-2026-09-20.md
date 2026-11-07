@@ -1,5 +1,7 @@
 # Drift Review — 2026-09-20 (changelog-as-scaffolding)
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Anchors
 - Local Hermes: v0.21.3 (2026.9.14), commit `498abb677ec39ea3ae9f8f5ed60e7def6bc47e70`
 - Upstream HEAD (origin/main): `0497b945707788bf4297645d6c563463cbf98e0a`

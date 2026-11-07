@@ -1,6 +1,8 @@
 # Hermes Architecture Drift Changelog — 2026-09-27 (weekly)
 
-> **Read this before assuming any section of `references/Hermes_Architecture.md` is current.**
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
+> **Read this before assuming any section of `Hermes_Architecture.md` is current.**
 > The main reference is unchanged from the 2026-07-05 full re-compile. This changelog
 > is the scaffold the next full re-compile will consume; the reference stays untouched
 > until then per skill protocol.
@@ -49,7 +51,7 @@ The next full re-compile of `Hermes_Architecture.md` should consume this list as
 - No approvals-mode default flips this week (smart still default per CHANGELOG-2026-07-19).
 
 ### Skills (format, disabled-gate, preload)
-- **`test: preserve skill schema cache stability across profiles`** — `7add9e62a4` — schema cache is now stable across profiles (important for multi-agent profile hygiene on M5 fleet).
+- **`test: preserve skill schema cache stability across profiles`** — `7add9e62a4` — schema cache is now stable across profiles (important for multi-agent profile hygiene across multiple profiles).
 - **`fix: stabilize Python e2e entrypoints and skill schema`** — `af23d04787`.
 - New community skills via plugin catalog: `plan-mode`, `jev-skill-router`, `jev-judge`, `lib-docs`, `command-tray`, `glasser`, `hermes-monitor`, `needs-you`, `prompt-enhance`.
 
@@ -168,7 +170,7 @@ The next full re-compile of `Hermes_Architecture.md` should consume this list as
 - No new model additions this week (no `feat(models)` high-impact commits).
 - `feat(model-pickers)`, `feat(model-catalog)` — incremental picker UX.
 
-### Memory (Hindsight / Omega / Graphiti / Honcho / Mem0 / supermemory)
+### Memory (Hindsight / Omega / Honcho / Mem0 / supermemory and other providers)
 - `fix(memory)`: 35 commits — incremental.
 - `fix(hindsight)`: 5 commits.
 - `fix(memory/mem0)`, `fix(memory/byterover)`, `fix(memory/supermemory)`, `fix(memory/holographic)` — provider-specific.

@@ -1,11 +1,11 @@
 # Config Migration & Provider Routing Lessons
 
-Load when migrating a Hermes profile between providers, rewriting `config.yaml`/`model-routing.md`, auditing MOA presets, cleaning stale providers, or creating a worker profile. Compiled from a verified OpenRouter PAYG migration on the `ss` profile.
+Load when migrating a Hermes profile between providers, rewriting `config.yaml`/`model-routing.md`, auditing MOA presets, cleaning stale providers, or creating a worker profile. Compiled from a verified OpenRouter pay-as-you-go migration on an example profile.
 
 ## Hard rules (operator-mandated)
 
-- **No `sed`/`awk`/shell text tools for file edits on this macOS box.** Operator directive. Use Python (`pathlib`, `yaml`, `re`) via `execute_code`, or official `hermes config` CLI.
-- **When the operator authorizes a multi-step sequence, execute it to completion (verification pass) or halt only on a genuine blocker.** Do not drip one command per turn or interleave permission requests mid-sequence — this drew repeated, explicit operator frustration.
+- **Prefer portable, platform-neutral editing for config files.** `sed`/`awk` flags differ across platforms (e.g. BSD vs GNU), so avoid shell text tools for file edits. Use Python (`pathlib`, `yaml`, `re`) via `execute_code`, or official `hermes config` CLI.
+- **When the operator authorizes a multi-step sequence, execute it to completion (verification pass) or halt only on a genuine blocker.** Do not drip one command per turn or interleave permission requests mid-sequence.
 - **Never claim "done"/"complete" without readback evidence:** `hermes config check` output, `hermes moa list`, the active `model` block, and a file diff/summary. Do not report a profile "created" when only a routing-doc row was added (this overclaim happened and had to be corrected).
 - **Back up every config/SSOT file before mutating** (timestamped copy via `shutil.copy2`, not `replace` — `replace` destroys the original).
 - **Re-parse with `yaml.safe_load()` after every write** and assert only the intended keys changed (no duplication, no dropped blocks).
@@ -73,7 +73,7 @@ Check **both** `config.yaml` and `model-routing.md` — stale slugs hide in the 
 
 Hermes ships **built-in provider aliases** for several third-party endpoints that are invocable via `--provider <alias>` (and the model picker) without any entry in the profile's `providers:` block. As of 2026-09 the known aliases include `opencode-zen`, `opencode-go`, `opencode-free` (keyless), `copilot`, `copilot-acp`, `anthropic`, `gemini`, `huggingface`, `novita`, `openai-api`, `bedrock`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `upstage`, `deepseek`, `nvidia`, `ollama-cloud`, `qwen-oauth`, `stepfun`, `tencent-tokenhub`, `router`, `nebius-token-factory`, `ai-gateway`, `azure-foundry`, `lmstudio`, `zai`, `kimi-coding`, `minimax-cn`, `alibaba*` family, `commandcode*`, `xai-oauth`, `minimax`, `minimax-oauth`, `openai-codex`.
 
-Pitfall: when auditing whether a provider is "configured" for a fleet profile, grepping `providers:` alone produces a false-negative for every built-in alias. A complete presence check requires:
+Pitfall: when auditing whether a provider is "configured" for a multi-profile install, grepping `providers:` alone produces a false-negative for every built-in alias. A complete presence check requires:
 
 1. Grep `providers:` + `fallback_providers:` blocks across every profile's `config.yaml`.
 2. Grep `--provider` flag conventions in the live `--help` output (`hermes chat --help` enumerates all aliases — the CLI help is the SSOT for what is invocable).
@@ -92,7 +92,7 @@ Retiring a provider means removing **all** traces: `custom_providers` entry (wit
 
 If the operator asks for a real profile, create a **real profile directory**, not a routing row:
 ```bash
-hermes profile create <name> --clone-from ss --no-alias --description "..."
+hermes profile create <name> --clone-from <orchestrator-profile> --no-alias --description "..."
 ```
 - `--no-skills` is **mutually exclusive** with `--clone-from`/`--clone`/`--clone-all` (cloning always copies skills). Drop `--no-skills` when cloning.
 - Cloning copies `config.yaml`, `.env`, `SOUL.md`, and skills. Then:
@@ -107,20 +107,20 @@ hermes profile create <name> --clone-from ss --no-alias --description "..."
         model: google/gemini-3.5-flash:nitro
     ```
   - Strip inherited `moa`/`provider_routing`/`openrouter`/`custom_providers` blocks the worker doesn't need.
-  - **Rewrite the cloned `SOUL.md`** — a worker profile must NOT retain the orchestrator identity it inherited from `ss`. Give it a worker CANARY and explicit "never become default router / explicit-dispatch-only" boundaries.
+  - **Rewrite the cloned `SOUL.md`** — a worker profile must NOT retain the orchestrator identity it inherited from the source profile. Give it a worker CANARY and explicit "never become default router / explicit-dispatch-only" boundaries.
   - Confirm the required key (e.g. `MINIMAX_API_KEY`) is present in the profile or global `.env` before proceeding; copy it in via Python if only global has it. Never print the secret value — report present/absent only.
 
 ## Routing roles vs runnable profiles
 
-`hermes-engineer`, `hermes-reviewer`, etc. may exist as **empty stub dirs with no `config.yaml`** — they are kanban routing *labels* in `model-routing.md`, not runnable profiles. Only dirs with a `config.yaml` are real profiles. Do not claim "N profiles" when most are routing stubs.
+Role names such as `engineer` or `reviewer` may exist as **empty stub dirs with no `config.yaml`** — they are routing *labels* in a routing doc, not runnable profiles. Only dirs with a `config.yaml` are real profiles. Do not claim "N profiles" when most are routing stubs.
 
-## AGENTS.md roster hygiene
+## Roster doc hygiene
 
-Add roster entries under a proper `## Agent Roster` heading with a real table header — never as an orphan `| ... |` row floating between unrelated sections, and never inside a `legacy-overlay-MANAGED:BEGIN/END` block (that block is regenerated on roster sync).
+If you keep an agent roster doc, add entries under a proper heading with a real table header — never as an orphan `| ... |` row floating between unrelated sections, and never inside a machine-managed block that is regenerated on roster sync.
 
 ## Temporal SSOT
 
-For current-state/SSOT events like new-profile creation, write a Graphiti episode in the `shag-hermes` group so cross-agent temporal memory stays consistent.
+For current-state/SSOT events like new-profile creation, record the event in whatever temporal memory store you use so cross-agent memory stays consistent.
 
 ## Verification checklist (run before declaring complete)
 

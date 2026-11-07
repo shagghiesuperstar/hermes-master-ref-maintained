@@ -1,10 +1,12 @@
 # Hermes Architecture Reference — Drift Changelog 2026-07-12
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.18.0 (2026.7.1) — local `cd4a6ec2f` (fix/cron-update-pin-snapshots branch, +2 carried commits on top of `cdcbc3a31`)
 - **Upstream HEAD reviewed:** `aaeba213d` (origin/main)
-- **Prior SSOT anchor (last drift review):** `cdcbc3a31` (v2026.7.1) — `references/Hermes_Architecture.md` last_synced 2026-06-21
+- **Prior SSOT anchor (last drift review):** `cdcbc3a31` (v2026.7.1) — `Hermes_Architecture.md` last_synced 2026-06-21
 - **Commits between anchors:** **214** (~21 feat, ~80 fix, ~12 refactor, ~25 test, remainder chore/salvage/docs)
 - **Window:** 2026-07-05 → 2026-07-12 (~1 week)
 - **Local vs upstream:** local is **214 commits behind** `origin/main` (Hermes install is on `cd4a6ec2f`, upstream at `aaeba213d`); the local branch is `fix/cron-update-pin-snapshots` which has already merged `cdcbc3a31`. A regular `git pull --ff-only` (or rebase) will close the gap.
@@ -188,8 +190,8 @@ When the operator authorizes a full re-anchor (or when cumulative drift exceeds 
 
 - **Local is 214 commits behind `origin/main`.** The local branch `fix/cron-update-pin-snapshots` has `cdcbc3a31` merged in (matching the prior anchor), so architecture deltas are reviewed against upstream HEAD; the local Hermes binary is otherwise identical to the anchor commit for architecture purposes.
 - **Docs site not re-fetched.** The official docs at `hermes-agent.nousresearch.com/docs` were last visited during the 2026-07-05 pass; any doc-only updates since then are not in this changelog. Spot-check before relying on a docs claim.
-- **Public mirror not yet re-synced.** `shagghiesuperstar/hermes-master-ref-maintained` still carries the 2026-06-21 SSOT. A follow-up pass should push this changelog.
-- **No re-compile.** Per the skill protocol ("partial edit is worse than no edit"), `references/Hermes_Architecture.md` is left untouched. The skill's `last_drift_review` is bumped to today; the SSOT will be re-anchored when (a) the operator explicitly requests, or (b) cumulative drift exceeds 500 commits, or (c) the next 4-week window lands.
+- **Public mirror not yet re-synced.** the public mirror repo still carries the 2026-06-21 SSOT. A follow-up pass should push this changelog.
+- **No re-compile.** Per the skill protocol ("partial edit is worse than no edit"), `Hermes_Architecture.md` is left untouched. The skill's `last_drift_review` is bumped to today; the SSOT will be re-anchored when (a) the operator explicitly requests, or (b) cumulative drift exceeds 500 commits, or (c) the next 4-week window lands.
 
 ## Verification
 

@@ -4,11 +4,11 @@ Lesson learned 2026-06-28.
 
 ## The pattern that bit me
 
-Shag sent a documented procedure in a chat message:
+The operator sent a documented procedure in a chat message:
 
 ```bash
-hermes config set approvals.mode off --profile ss && \
-hermes config get approvals.mode --profile ss   # should print: off
+hermes config set approvals.mode off --profile <profile> && \
+hermes config get approvals.mode --profile <profile>   # should print: off
 ```
 
 I almost executed the docstring verbatim. Both commands fail on the live
@@ -25,7 +25,7 @@ Hermes build:
 
 ## Rule
 
-**Whenever the user (or any message) hands you a multi-line procedure that cites an external system — a docstring, a Stack Overflow answer, a `README.md`, a skill's `references/*.md` — replicate the verification before executing any step:**
+**Whenever the user (or any message) hands you a multi-line procedure that cites an external system — a docstring, a Stack Overflow answer, a `README.md`, a skill's own reference files — replicate the verification before executing any step:**
 
 1. **Source of truth for Hermes:** `curl -fsSL https://hermes-agent.nousresearch.com/docs/` (the rendered Docusaurus site). For one-page citations, the LLM-friendly `llms-full-*.txt` may be linked from the index HTML; fetch both `user-guide/configuration` and `reference/cli-commands` for CLI surface.
 2. **Cross-check against the local Hermes build.** `hermes --help`, `hermes <subcommand> --help`, and `hermes config --help` are the fastest way to confirm what subcommands actually exist.
@@ -34,9 +34,9 @@ Hermes build:
 
 ## Don't
 
-- ❌ Execute a docstring because Shag said "follow these steps." They will be **offended** if you burn time on a broken invocation.
+- ❌ Execute a docstring because the operator said "follow these steps." They will not want you burning time on a broken invocation.
 - ❌ Quote the docstring back as proof it worked. Cite what the live build actually returned.
-- ❌ Patch the failing command into a working invocation without telling Shag the docstring was wrong. They sent the wrong procedure — that fact itself is the report.
+- ❌ Patch the failing command into a working invocation without telling the operator the docstring was wrong. They sent the wrong procedure — that fact itself is the report.
 
 ## Cite-able docs already loaded for this class of work
 

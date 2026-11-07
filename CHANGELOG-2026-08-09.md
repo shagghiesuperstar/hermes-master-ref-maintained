@@ -1,11 +1,13 @@
 # Hermes Architecture Reference — Drift Changelog 2026-08-09
 
+> Historical snapshot, not current truth. See [README.md](README.md) and [Hermes_Architecture.md](Hermes_Architecture.md) for current state.
+
 ## Scope of this review
 
 - **Local Hermes version:** v0.19.1 (2026.7.30) — local `3f497e2b4` (on `main`, **1,483 commits behind** `origin/main`)
 - **Upstream HEAD reviewed:** `f28469349` (origin/main as of 2026-08-09)
 - **Prior SSOT anchor (last drift review upstream HEAD):** `65b73eb1e` (CHANGELOG-2026-07-26)
-- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `references/Hermes_Architecture.md` last synced 2026-06-21
+- **Prior full SSOT anchor:** `cdcbc3a31` (v2026.7.1) — `Hermes_Architecture.md` last synced 2026-06-21
 - **Commits between prior upstream and current upstream:** **5,196** (~557 feat, ~2,687 fix, rest chore/test/refactor/perf/docs)
 - **Window:** 2026-07-26 → 2026-08-09 (~2 weeks; prior weekly cron appears to have missed one cycle)
 - **Releases in window:** `v0.19.0` (2026.7.20) · `v0.19.1` (2026.7.30) · `v0.20.0` (2026.8.3)
@@ -237,7 +239,7 @@ Desktop absorbed the plurality of feats (167 `feat(desktop)`). Architecture-rele
 
 ## Action items for next full reference re-compile
 
-Concrete per-section edits for `references/Hermes_Architecture.md` (do NOT apply until a full re-compile pass):
+Concrete per-section edits for `Hermes_Architecture.md` (do NOT apply until a full re-compile pass):
 
 1. **Agent loop / defaults** — `max_turns` / `max_iterations` default **500** (was 90). Update every mention + diagrams.
 2. **state.db** — document SCHEMA_VERSION **25**, activity-tracking columns, SessionDB mixin split (`hermes_state_{common,schema,search,portability}.py`), read/unread, pin flag, clean-markers, doctor health stats.
