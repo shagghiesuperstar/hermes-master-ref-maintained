@@ -1,8 +1,9 @@
 # Hermes Agent — Master Architecture Reference
 ## `Hermes_Architecture.md`
 ### Version sourced from: NousResearch/hermes-agent (GitHub) + https://hermes-agent.nousresearch.com/docs/
-### Compiled: 2026-06-14 | Updated: 2026-11-06 | Docs-only reference for offline agentic development
-### Synced upstream SHA: `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (main, observed 2026-11-06) | Latest release at sync: v0.23.0 (published 2026-11-05)
+### Compiled: 2026-06-14 | Rebuilt: 2026-11-06 | Delta-applied: 2026-11-08 | Docs-only reference for offline agentic development
+### Upstream anchor: `acdc8f1ba65c0231ae8277e846a4d55928913991` (main, observed 2026-11-08) | Full-rebuild anchor: `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (observed 2026-11-06) | Latest release at sync: v0.23.0 (published 2026-11-05)
+### Link pinning: source links name the commit each claim was verified against. Sections re-verified on 2026-11-08 point at the 2026-11-08 anchor; the rest point at the 2026-11-06 rebuild anchor.
 
 > Sources: [Hermes Agent documentation home](https://hermes-agent.nousresearch.com/docs/) · [upstream release v0.23.0 notes](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0) · [README.md](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/README.md)
 
@@ -48,7 +49,9 @@ Unnumbered front matter: [What changed since 2026-06-21](#what-changed-since-202
 
 > Sources: [Hermes Agent documentation home](https://hermes-agent.nousresearch.com/docs/) · [upstream release v0.23.0 notes](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0)
 
-This file was last revised on 2026-06-21 and rebuilt on 2026-11-06 against upstream docs and source at the SHA in the header. The list below is a dated summary; each row points to the numbered section holding the verified detail and its citations. "Then" means the 2026-06-21 text of this file; "Now" means what the docs/source at the synced SHA state. Nothing here was executed.
+This file was last revised on 2026-06-21, rebuilt on 2026-11-06 against upstream docs and source at `9f23c4311a4c4837078081db4f3cd8deab23c0fe`, and delta-applied on 2026-11-08 for the 938 commits between that anchor and `acdc8f1ba65c0231ae8277e846a4d55928913991`. The list below is a dated summary; each row points to the numbered section holding the verified detail and its citations. "Then" means the 2026-06-21 text of this file; "Now" means what the docs/source at the synced SHA state. Nothing here was executed.
+
+**Delta applied 2026-11-08.** The 938 commits after the 2026-11-06 rebuild anchor changed the session-storage schema (v32 to v33), removed the CJK FTS5 tokenizer from core, unified the gateway's stored-transcript read behind `session.transcript`, and added a public `resolve-profile` control verb, a public `redact_sensitive_text` plugin API, a `previous_message` memory-provider input, a real-profile `browser:` vault login source, a moved-module compatibility finder, and `hermes clipboard image --json`. Each is recorded in its numbered section below and in `CHANGELOG-2026-11-08.md`. The 2026-11-06 rebuild was published only to the public mirror repository; this file and the local skill now carry it too.
 
 ## Summary of material changes
 
@@ -118,7 +121,7 @@ Issues [community/secondary]: [#24770](https://github.com/NousResearch/hermes-ag
 
 > Sources: [Architecture](https://hermes-agent.nousresearch.com/docs/developer-guide/architecture) · [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [Codebase Ownership Map](https://hermes-agent.nousresearch.com/docs/developer-guide/codebase-ownership) · [developer-guide/architecture.md](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/website/docs/developer-guide/architecture.md) · [run_agent.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/run_agent.py)
 
-Everything below is derived from the upstream docs and source at commit `9f23c4311a4c4837078081db4f3cd8deab23c0fe`. Where this guide says "the docs state", it reports what the documentation says, not behavior that was executed.
+Everything below is derived from the upstream docs and source at the commit named in each section's source line: `acdc8f1ba65c0231ae8277e846a4d55928913991` for the sections re-verified on 2026-11-08, and `9f23c4311a4c4837078081db4f3cd8deab23c0fe` for the rest. Where this guide says "the docs state", it reports what the documentation says, not behavior that was executed.
 
 ## What Hermes Agent Is
 
@@ -1907,13 +1910,13 @@ Per-skill documentation (each bundled and optional skill has its own generated p
 
 # 13. Memory System — MEMORY.md, USER.md, Providers
 
-> Sources: [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [Memory Providers](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) · [Honcho Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/honcho) · [Memory Provider Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [tools/memory_tool.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/memory_tool.py) · [tools/memory_tool_store.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/memory_tool_store.py)
+> Sources: [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [Memory Providers](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) · [Honcho Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/honcho) · [Memory Provider Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [tools/memory_tool.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/memory_tool.py) · [tools/memory_tool_store.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/memory_tool_store.py)
 
 Hermes has two memory layers: **built-in curated memory** (two small bounded files, always injected into the system prompt) and an optional **external memory provider** (one at a time, additive). A third recall mechanism, `session_search` over the SQLite session store, is separate from both. This section covers the first two; building a provider plugin is covered in section 21 and the developer guide linked above.
 
 ## 13.1 Built-in memory files
 
-> Sources: [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [tools/memory_tool_store.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/memory_tool_store.py)
+> Sources: [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [tools/memory_tool_store.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/memory_tool_store.py)
 
 | File | Purpose | Default char limit |
 |---|---|---|
@@ -1943,7 +1946,7 @@ The header shows the store, usage percentage and character counts. The snapshot 
 
 ## 13.3 The `memory` tool
 
-> Sources: [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [tools/memory_tool.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/memory_tool.py)
+> Sources: [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [tools/memory_tool.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/memory_tool.py)
 
 | Action | Behaviour |
 |---|---|
@@ -1961,7 +1964,7 @@ A target inside an operation that differs from the top-level one is an error ret
 
 ### 13.3.1 Configuration and write approval
 
-> Sources: [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [hermes_cli/config_defaults.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/config_defaults.py)
+> Sources: [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [hermes_cli/config_defaults.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/config_defaults.py)
 
 ```yaml
 memory:
@@ -2010,7 +2013,7 @@ The docs' checklist, in order: (1) confirm the model actually called the `memory
 
 ## 13.5 External memory providers
 
-> Sources: [Memory Providers](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) · [Honcho Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/honcho) · [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_manager.py)
+> Sources: [Memory Providers](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) · [Honcho Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/honcho) · [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_manager.py)
 
 Only **one** external provider can be active at a time, and it runs **alongside** (never instead of) built-in memory. The docs state that Hermes ships two in-tree provider plugins (RetainDB and ByteRover) and that others (Honcho, Hindsight, Supermemory, Mem0, OpenViking, Holographic) are installed from the plugin catalog; the same page notes RetainDB and ByteRover are scheduled to leave core on 15 October 2026 (provider name, settings, data directory and tools unchanged). Memori is described as an externally supplied integration. Providers that stop shipping with Hermes are auto-installed from the catalog by `hermes update` for profiles that name them.
 
@@ -2050,12 +2053,13 @@ Honcho is maintained by its vendor and installed from the catalog; config lives 
 
 ### 13.5.2 Provider lifecycle and compression interplay
 
-> Sources: [Memory Provider Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_provider.py)
+> Sources: [Memory Provider Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_provider.py)
 
 A provider implements the `MemoryProvider` ABC (`agent/memory_provider.py`). Required: `name`, `is_available()` (no network calls), `initialize(session_id, **kwargs)`, `get_tool_schemas()`, `handle_tool_call()`, `get_config_schema()`, `save_config()`. Optional hooks per the docs: `system_prompt_block()`, `prefetch(query)`, `queue_prefetch(query)`, `sync_turn(user, assistant)`, `on_session_end(messages)`, `on_pre_compress(messages)`, `on_memory_write(action, target, content, metadata)`, `shutdown()`, plus profile-created/renamed hooks. Two details relevant here:
 
 - **Pre-compression:** `on_pre_compress()` is best-effort by default. A provider can opt into the fail-closed checkpoint contract (`pre_compress_checkpoint_api_version = 2`) and operators then set `compression.checkpoint_required: true`; compression is blocked (`BLOCKED_MISSING_PREREQUISITE`) unless the checkpoint succeeded. The docs state no bundled provider advertises v2, and enabling the gate without one blocks every compression attempt.
 - **Oversized recall:** prefetch results are returned in full up to a safety ceiling of 10 times `hooks.output_spill.max_chars` (at least 100,000 characters); `memory.prefetch_spill_enabled: true` opts into head/tail spill previews.
+- **`previous_message` on turn start** (changed upstream `7d96784e6d`, follow-up `16f70a2b33`): a provider that prepares the next turn's recall at the end of the current one (`queue_prefetch` keyed on the message just answered) has nothing prepared when a process resumes a session — the resumed process starts at turn N without having run turn N-1. To catch up the provider needs turn N-1's message, and it cannot rely on its own store for it: a provider configured **not to save messages** has none. The provider is therefore given the previous user message at turn start. After a multimodal turn, `previous_message` is the **typed ask**, not the raw attachment.
 
 Full plugin-development detail (directory vs packaged layout, threading contract, config schema, CLI commands) belongs to section 21 and the [Memory Provider Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) page.
 
@@ -2286,15 +2290,15 @@ Context-file loading (`AGENTS.md`, `SOUL.md`; see sections 6 and 7), the session
 
 # 15. Session Storage — SQLite Schema
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [State DB Recovery](https://hermes-agent.nousresearch.com/docs/developer-guide/state-db-recovery) · [Sessions](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state.py) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py) · [hermes_state_schema.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_schema.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [State DB Recovery](https://hermes-agent.nousresearch.com/docs/developer-guide/state-db-recovery) · [Sessions](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state.py) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py) · [hermes_state_schema.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_schema.py)
 
 Hermes keeps conversations in one SQLite database per profile, `state.db`. This section describes what the docs and source say about the file, its tables, search indexes, migration policy, contention handling and the operator commands around it. Everything here is derived from the docs and source at the pinned commit; no database was opened or migrated while writing it.
 
-Version scoping note: the developer guide states "Current schema version: **31**", but `SCHEMA_VERSION` in `hermes_state_common.py` at this commit is **32**. The source comment says v32 is a version bump only (no data migration) recording that new tables and three columns were declared under the v31 shape. Treat the source value as authoritative and the docs table as lagging by one.
+Version scoping note: the developer guide states "Current schema version: **31**", but `SCHEMA_VERSION` in `hermes_state_common.py` at this commit is **33**. The source comment says v33 is a data-only migration that re-tags delegate subagent rows that lost their `_delegate_from` marker; v32 was a version bump only (no data migration) recording that new tables and three columns were declared under the v31 shape. Treat the source value as authoritative and the docs table as lagging by two.
 
 ## Where the database lives and who writes it
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [Gateway local sessions](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions) · [Sessions](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [Gateway local sessions](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-local-sessions) · [Sessions](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state.py)
 
 - Default path: `get_hermes_home() / "state.db"`. That is `~/.hermes/state.db` for the default profile and `<default root>/profiles/<name>/state.db` for a named profile; wherever `HERMES_HOME` points wins. Callers should not hard-code the path. SQLite also creates `state.db-wal` and `state.db-shm` beside it.
 - Each named profile has its own database. A process that serves several profiles (multiplex gateway, `hermes serve`) must bind the right profile home when it opens a handle; a subprocess that drops `HERMES_HOME` can fall back to the default profile.
@@ -2304,7 +2308,7 @@ Version scoping note: the developer guide states "Current schema version: **31**
 
 ## Source layout
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state.py) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py) · [hermes_state_schema.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_schema.py) · [hermes_state_fts.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_fts.py) · [hermes_state_search.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_search.py) · [hermes_state_wal.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_wal.py) · [hermes_state_errors.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_errors.py) · [hermes_state_repair.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_repair.py) · [hermes_state_portability.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_portability.py) · [hermes_state_maintenance.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_maintenance.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state.py) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py) · [hermes_state_schema.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_schema.py) · [hermes_state_fts.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_fts.py) · [hermes_state_search.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_search.py) · [hermes_state_wal.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_wal.py) · [hermes_state_errors.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_errors.py) · [hermes_state_repair.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_repair.py) · [hermes_state_portability.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_portability.py) · [hermes_state_maintenance.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_maintenance.py)
 
 The old single-file `hermes_state.py` is now a facade (it holds `SessionDB`, the write-contention constants and the connection setup) plus a large family of `hermes_state_*.py` siblings at the repository root. Examples verified in the tree:
 
@@ -2312,7 +2316,9 @@ The old single-file `hermes_state.py` is now a facade (it holds `SessionDB`, the
 |---|---|
 | `hermes_state_common.py` | `SCHEMA_SQL`, `SCHEMA_VERSION`, FTS trigger names, maintenance thresholds |
 | `hermes_state_schema.py` | Applies the schema and the version-gated migration chain |
-| `hermes_state_fts.py`, `hermes_state_search.py` | FTS5 index DDL (including the CJK index) and `search_messages` |
+| `hermes_state_fts.py`, `hermes_state_search.py` | FTS5 index DDL and `search_messages` |
+| `hermes_state_delegate_children.py` | Resolves the delegate subagents owned by one session's lineage (recursive, including compression continuations) |
+| `hermes_state_stored_reads.py` | The store reads behind `session.transcript`, the `session.list` picker fields and a delegated child's lookup by `subagent_id` |
 | `hermes_state_wal.py` | Journal-mode and PRAGMA policy (WAL with fallback to DELETE, `database:` config pragmas) |
 | `hermes_state_errors.py`, `hermes_state_repair.py` | Lock/corruption error classification, repair paths |
 | `hermes_state_sessions.py`, `hermes_state_messages.py`, `hermes_state_titles.py` | Session lifecycle, message append/read, titles |
@@ -2322,7 +2328,7 @@ This is not the full list; run `fd 'hermes_state' <checkout>` to enumerate the s
 
 ## Tables
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py) · [hermes_state_fts.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_fts.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py) · [hermes_state_fts.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_fts.py)
 
 The developer guide's architecture diagram lists the tables below. `SCHEMA_SQL` in `hermes_state_common.py` additionally declares `system_prompts`, `gateway_hygiene_state`, `conversation_generations`, `gateway_heartbeats` and `session_turn_leases`, which I verified in source.
 
@@ -2334,7 +2340,6 @@ state.db (SQLite; WAL by default)
 ├── system_prompts         prompt text deduplicated by hash (sessions.system_prompt_hash)
 ├── messages_fts           FTS5 index (content, tool_name, tool_calls)
 ├── messages_fts_trigram   FTS5 trigram index (substring / CJK)
-├── messages_fts_cjk       FTS5 index using the cjk_unicode61 tokenizer
 ├── state_meta             key/value markers (FTS stale/rebuild markers, backfill cursors, ...)
 ├── gateway_routing        session-key -> active session routing index
 ├── gateway_hygiene_state, conversation_generations, gateway_heartbeats
@@ -2348,7 +2353,7 @@ state.db (SQLite; WAL by default)
 
 ### sessions
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py)
 
 One row per session. Verified columns in `SCHEMA_SQL` include identity and lineage (`id`, `source`, `user_id`, `parent_session_id`), gateway routing metadata (`session_key`, `chat_id`, `chat_type`, `thread_id`, `display_name`, `origin_json`, `expiry_finalized`), model and prompt (`model`, `model_config`, `system_prompt`, `system_prompt_hash`), timing (`started_at`, `ended_at`, `end_reason`, `last_activity_at`), counters (`message_count`, `tool_call_count`, `api_call_count`), token and billing columns (`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `reasoning_tokens`, `billing_provider`, `billing_base_url`, `billing_mode`, `estimated_cost_usd`, `actual_cost_usd`, `cost_status`, `cost_source`, `pricing_version`), workspace fields (`cwd`, `git_branch`, `git_repo_root`), `title` and `title_source`, handoff and compression-failure bookkeeping, and the flags `profile_name`, `transport_profile`, `rewind_count`, `archived`, `auto_archived`, `pinned`, `hidden`. Timestamps are Unix-epoch REAL values.
 
@@ -2358,7 +2363,7 @@ Constraints stated in the docs: `parent_session_id` self-references `sessions(id
 
 ### messages
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py)
 
 One row per message: `id` (autoincrement), `session_id`, `role`, `content`, `tool_call_id`, `tool_calls` (JSON string), `tool_name`, `timestamp`, `token_count`, `finish_reason`, plus reasoning carriers (`reasoning`, `reasoning_content`, `reasoning_details`, `codex_reasoning_items`, `codex_message_items`). Newer columns named by the docs: `effect_disposition`, `platform_message_id`, `observed`, `active`, `compacted`, `api_content`, `display_kind`, `display_metadata`, `message_uid`, `absorbed_message_uids`, `tool_call_uids`, `tool_call_uid`.
 
@@ -2372,32 +2377,35 @@ Behaviors the docs call out:
 
 ### session_model_usage
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py)
 
 Per-model usage attribution. Verified in source: primary key `(session_id, model, billing_provider, billing_base_url, billing_mode, task)`, with api-call, token, estimated/actual cost and first/last-seen columns; rows cascade on session delete. Added by migrations v20 (seeded from historical aggregates) and v22 (`task` joins the primary key).
 
 ### Session-authority and delivery ledger
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [Session Storage Recovery](https://hermes-agent.nousresearch.com/docs/user-guide/session-storage-recovery) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py) · [gateway/delivery_ledger.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/delivery_ledger.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [Session Storage Recovery](https://hermes-agent.nousresearch.com/docs/user-guide/session-storage-recovery) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py) · [gateway/delivery_ledger.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/delivery_ledger.py)
 
 `runtime_epoch` (one row: owner epoch plus instance id), `session_admissions` (durable per-session input FIFO: queued, started, terminal, or `unknown` on owner loss), `worker_executions` and `worker_receipts` (managed worker, child, cron and kanban executions bound to a session and epoch, with ordered digest-checked results). The docs state these reference `sessions` with `ON DELETE RESTRICT`: deleting or pruning a session retires its terminal ledger rows in the same transaction and refuses while work is live or `unknown`. An input that was `started` when its owner died becomes `unknown` at the next owner start and is never replayed; later inputs wait until it is resolved (`prompt.resolve_unknown`). The user guide documents `hermes sessions` handling for a turn lost in a gateway crash (see the Sessions page, "Discard a Turn Lost in a Gateway Crash"). `delivery_obligations` (owed replies) is created lazily by `gateway/delivery_ledger.py`.
 
 ## Full-text search indexes
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [State DB Recovery](https://hermes-agent.nousresearch.com/docs/developer-guide/state-db-recovery) · [hermes_state_fts.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_fts.py) · [hermes_state_search.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_search.py) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [State DB Recovery](https://hermes-agent.nousresearch.com/docs/developer-guide/state-db-recovery) · [hermes_state_fts.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_fts.py) · [hermes_state_search.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_search.py) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py)
 
 - `messages_fts` is an FTS5 table over `content`, `tool_name`, `tool_calls`, kept in sync by INSERT/UPDATE/DELETE triggers. The triggers are gated on `fts_rebuild_high_water` / `fts_rebuild_progress` markers in `state_meta` so a background rebuild does not double-index.
-- `messages_fts_trigram` (trigram tokenizer, substring and CJK) and `messages_fts_cjk` (`cjk_unicode61` tokenizer) are additional indexes. Per the migration table, cron sessions (v29) and delegate-child/subagent sessions (v30) are excluded from the trigram index only; their rows remain in `messages` and in the standard word index, so `session_search` still finds them.
+- `messages_fts_trigram` (trigram tokenizer, substring and CJK) is the additional index. Per the migration table, cron sessions (v29) and delegate-child/subagent sessions (v30) are excluded from the trigram index only; their rows remain in `messages` and in the standard word index, so `session_search` still finds them.
+- **The separate `messages_fts_cjk` index (`cjk_unicode61` tokenizer) was removed from core** after the 2026-11-06 rebuild. Upstream deleted `native/fts5_cjk/`, the tokenizer loader, the `sessions.cjk_fts` key and its `HERMES_CJK_FTS` bridge, `HERMES_FTS5_CJK_SO`, the table and its triggers, and the `cjk_unicode61` cases in the FTS error classifiers and the repair probe. The upstream commit records why this changed no behavior: no installer, package or image ever shipped `libfts5_cjk.so`, so the loader returned `False` on every install and CJK queries already took the trigram and `LIKE` routes, which are unchanged. `hermes_state_fts.py` keeps only a retirement list (`_RETIRED_CJK_TRIGGERS`, `_RETIRED_CJK_OBJECTS`) that drops the index an **older release** built.
 - FTS storage layout is tracked independently of `SCHEMA_VERSION` in the `state_meta` key `fts_storage_version`; v23 is the "external-content" redesign, and `hermes sessions optimize-storage` migrates an existing database to that compact layout.
 - Query syntax supported by the search tool (the user guide): implicit-AND keywords, `"exact phrase"`, `OR`, `NOT`, and prefix `deploy*`. `_sanitize_fts5_query()` strips unmatched quotes, wraps hyphenated terms in quotes and drops dangling boolean operators.
 - The agent-facing `session_search` tool uses FTS5 with no LLM call. The docs describe four shapes inferred from arguments (no `mode` parameter): discovery (`query`), scroll (`session_id` + `around_message_id`, with `window`), read (`session_id` alone) and browse (no arguments); optional `sort`, `detail` and `role_filter`.
-- Derived-index failure policy: `sessions` and `messages` are canonical and the FTS tables are derived. On an FTS corruption error `SessionDB` records a durable `fts_stale` marker, removes the FTS triggers in the same transaction, retries canonical writes without them and serves searches from a `LIKE` fallback; the failing live operation never runs `FTS5('rebuild')`.
+- Derived-index failure policy: `sessions` and `messages` are canonical and the FTS tables are derived.
+- `display_metadata` is **merged**, not overwritten: `display_metadata = <this>` folds a JSON object into the column (its keys win, a null value removes a key), so a row-addressed rewrite does not wipe a key another writer added meanwhile (a reaction).
+- A separate trigger `messages_display_revision_update` fires on updates to `codex_reasoning_items`, `codex_message_items`, `display_kind` and `display_metadata`, and bumps `sessions.transcript_revision` so a transcript poller's cursor (`transcript_cursor_state`) sees the change. It is deliberately named apart from the neighbouring trigger so that an older build's open, which recreates that trigger with its own column list, leaves this one in place. On an FTS corruption error `SessionDB` records a durable `fts_stale` marker, removes the FTS triggers in the same transaction, retries canonical writes without them and serves searches from a `LIKE` fallback; the failing live operation never runs `FTS5('rebuild')`.
 
 ## Schema version and migrations
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_common.py) · [hermes_state_schema.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_schema.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_common.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_common.py) · [hermes_state_schema.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_schema.py)
 
-- `schema_version` holds one integer; source value at this commit is 32.
+- `schema_version` holds one integer; source value at this commit is **33**.
 - Policy (docs and the source comment): every writable open runs `executescript(SCHEMA_SQL)` plus `_reconcile_columns()`, which diffs live columns against the declared schema and adds missing ones (idempotent, additive). The version-gated chain is reserved for data migrations and index/FTS changes that cannot be declared. Schema drift is detected by a read probe, not by the number; a new table or column needs no bump.
 - Documented data-migration milestones (versions not listed were declarative column additions):
 
@@ -2412,10 +2420,11 @@ Per-model usage attribution. Verified in source: primary key `(session_id, model
 | 29, 30 | Cron, then subagent sessions leave the trigram index |
 | 31 | `message_uid` family of columns, chunked resumable backfill, insert trigger minting uids |
 | 32 | Version bump only (source comment); no data migration |
+| 33 | Data-only (source comment): re-tag delegate subagent rows that lost the `_delegate_from` marker, so the lineage resolver can claim them again |
 
 ## Connection, journal mode and PRAGMAs
 
-> Sources: [Hermes Agent Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [Sessions](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) · [hermes_state_wal.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_wal.py) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state.py) · [cli-config.yaml.example](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/cli-config.yaml.example)
+> Sources: [Hermes Agent Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [Sessions](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) · [hermes_state_wal.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_wal.py) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state.py) · [cli-config.yaml.example](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/cli-config.yaml.example)
 
 - WAL is the default so that many readers and one writer can coexist. The `database:` section of `config.yaml` selects `journal_mode` (`wal` default, or `delete` for filesystems where WAL is unsafe) and optional PRAGMAs. The config template shows:
 
@@ -2433,7 +2442,7 @@ database:
 
 ## Write contention handling
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state.py) · [hermes_state_errors.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_errors.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state.py) · [hermes_state_errors.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_errors.py)
 
 Several processes open one `state.db` (the gateway as canonical writer, read-only browsers, maintenance commands, writers of non-session tables). `SessionDB` therefore uses:
 
@@ -2457,7 +2466,7 @@ When a writer exhausts its budget the turn ends with `session_persistence_failed
 
 ## Python API (SessionDB)
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state.py) · [hermes_state_sessions.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_sessions.py) · [hermes_state_messages.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_messages.py) · [hermes_state_search.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_search.py) · [hermes_state_titles.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_titles.py) · [hermes_state_portability.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_portability.py) · [hermes_state_maintenance.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_maintenance.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state.py) · [hermes_state_sessions.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_sessions.py) · [hermes_state_messages.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_messages.py) · [hermes_state_search.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_search.py) · [hermes_state_titles.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_titles.py) · [hermes_state_portability.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_portability.py) · [hermes_state_maintenance.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_maintenance.py)
 
 The documented public surface (names confirmed in the split modules; signatures as the docs show):
 
@@ -2496,7 +2505,7 @@ Pruning and archiving treat a compressed conversation as a unit through its live
 
 ## Retention, pruning and maintenance
 
-> Sources: [Sessions](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) · [CLI Commands Reference](https://hermes-agent.nousresearch.com/docs/reference/cli-commands) · [Session Storage Recovery](https://hermes-agent.nousresearch.com/docs/user-guide/session-storage-recovery) · [cli-config.yaml.example](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/cli-config.yaml.example)
+> Sources: [Sessions](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) · [CLI Commands Reference](https://hermes-agent.nousresearch.com/docs/reference/cli-commands) · [Session Storage Recovery](https://hermes-agent.nousresearch.com/docs/user-guide/session-storage-recovery) · [cli-config.yaml.example](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/cli-config.yaml.example)
 
 Config (`sessions:` block, shown commented in the template):
 
@@ -2517,7 +2526,7 @@ Per the Sessions page: auto-prune is off by default; only ended sessions are pru
 
 ## Recovery and corruption handling
 
-> Sources: [State DB Recovery](https://hermes-agent.nousresearch.com/docs/developer-guide/state-db-recovery) · [Session Storage Recovery](https://hermes-agent.nousresearch.com/docs/user-guide/session-storage-recovery) · [hermes_state_repair.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_repair.py) · [hermes_state_errors.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_errors.py)
+> Sources: [State DB Recovery](https://hermes-agent.nousresearch.com/docs/developer-guide/state-db-recovery) · [Session Storage Recovery](https://hermes-agent.nousresearch.com/docs/user-guide/session-storage-recovery) · [hermes_state_repair.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_repair.py) · [hermes_state_errors.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_errors.py)
 
 - Retired-WAL refusal: if one process rewrites the store while another still holds an old copy of the write-ahead log, the stale holders stop writing on purpose. The documented fix: stop every Hermes process on the profile (`hermes gateway stop`, quit Desktop, stop dashboard), run `hermes doctor` to list holders as `PID N (command)`, then start one process. Do not run `hermes doctor --fix` while processes run, do not delete `-wal`/`-shm`, do not copy `state.db` alone.
 - Bare `SQLITE_CORRUPT`/`SQLITE_NOTADB` on a live write quarantines the handle (`StateDbCorruptError`): the write propagates the typed error, later writes fail without touching the file, the handle never reopens, and `close()` skips its explicit checkpoint. Pending transcripts spool to `sessions/<id>.jsonl` and `pending_messages/`. Next steps in the docs: `hermes gateway stop`, then `hermes sessions recover --source <state.db> --inspect-only`, then `--output <new file>`, or restore the newest snapshot from `state-snapshots/`.
@@ -2527,7 +2536,7 @@ Per the Sessions page: auto-prune is off by default; only ended sessions are pru
 
 ## Browsing and test isolation
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_guard.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state_guard.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state_guard.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_guard.py)
 
 - Dashboard session browsing opens `state.db` read-only; GET listing, search, details and export never create an absent database, quarantine a zero-byte file, reconcile a stale schema or trigger auto-archive. Uninitialized or incompatible stores return HTTP 503. Read-only mode may still create empty WAL/SHM sidecars (SQLite coordination files).
 - Tests must use a temporary `HERMES_HOME` or explicit temp database. A live-system guard raises before a test-context process opens a production `state.db`; `HERMES_STATE_DB_GUARD_BYPASS=1` and `@pytest.mark.live_system_guard_bypass` are test-only escapes that should never be set in normal shells.
@@ -2931,13 +2940,13 @@ Not covered here: per-provider setup recipes (the LLM and Model Providers page),
 
 # 18. Gateway Internals (Messaging Platforms)
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/run.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/run.py) · [gateway/session.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/session.py)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/run.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/run.py) · [gateway/session.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/session.py)
 
-This section is a reference for how the messaging gateway is put together. It is written from the upstream docs and source at commit `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (the v0.23.0 line). Where it says "the docs state", that is what the page says; nothing here was executed. Several developer-guide pages disagree with each other or with source on details; those spots are called out inline so a reader can tell which source a statement comes from.
+This section is a reference for how the messaging gateway is put together. It is written from the upstream docs and source at commit `acdc8f1ba65c0231ae8277e846a4d55928913991` (the v0.23.0 line, re-verified 2026-11-08). Where it says "the docs state", that is what the page says; nothing here was executed. Several developer-guide pages disagree with each other or with source on details; those spots are called out inline so a reader can tell which source a statement comes from.
 
 ## Scope and how to read this
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/AGENTS.md](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/AGENTS.md)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/AGENTS.md](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/AGENTS.md)
 
 Covered here: the process model, message flow, session keys, authorization, platform adapters, delivery, hooks, process and service management, multiplexed profiles, the shared session authority that local clients attach to, Group Chats, the Webapp, and monitoring. Not covered in depth (see the linked reference pages): per-platform setup, the full slash-command catalogue (section 24), the relay wire protocol, and the complete `config.yaml` schema (section 3).
 
@@ -2956,7 +2965,7 @@ The docs describe the gateway as a single long-running background process that c
 
 ## Key files
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/platform_registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/platform_registry.py) · [gateway/run_inbound.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/run_inbound.py)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/platform_registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/platform_registry.py) · [gateway/run_inbound.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/run_inbound.py)
 
 | File | Purpose (per the docs) |
 |------|---------|
@@ -2981,7 +2990,7 @@ The previous version of this guide listed adapters such as `telegram.py`, `disco
 
 ## Architecture and message flow
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/platforms/base.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/platforms/base.py) · [gateway/run_inbound.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/run_inbound.py)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/platforms/base.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/platforms/base.py) · [gateway/run_inbound.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/run_inbound.py)
 
 ```text
  platform ──► adapter ──► MessageEvent ──► GatewayRunner._handle_message()
@@ -3010,7 +3019,7 @@ Internal push wakes (for example background-process completions) enter through `
 
 ### Session key format
 
-> Sources: [Gateway Session Lifecycle](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle) · [gateway/session.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/session.py)
+> Sources: [Gateway Session Lifecycle](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle) · [gateway/session.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/session.py)
 
 Source (`build_session_key`) documents the layout as:
 
@@ -3040,7 +3049,7 @@ Documentation inconsistency: `gateway-internals.md` shows an example `agent:main
 
 ### Two-level message guard
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/run_busy.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/run_busy.py)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/run_busy.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/run_busy.py)
 
 While an agent is running, an incoming message passes two guards in sequence:
 
@@ -3061,7 +3070,7 @@ display:
 
 ### Slash command dispatch
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/run_busy.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/run_busy.py) · [Gateway command parity](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/run_busy.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/run_busy.py) · [Gateway command parity](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-command-parity)
 
 All gateway slash commands go through one pipeline:
 
@@ -3076,7 +3085,7 @@ The generated "Gateway command parity" page tabulates, for every registry comman
 
 ## Authorization
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/authz_mixin.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/authz_mixin.py)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/authz_mixin.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/authz_mixin.py)
 
 The default is deny: the docs state that users who are not on an allowlist or paired via DM are denied. Three sources describe the check order, and they differ:
 
@@ -3094,7 +3103,7 @@ The source order is the authoritative one (the others are simplifications). Prac
 
 ### DM pairing
 
-> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [CLI commands reference](https://hermes-agent.nousresearch.com/docs/reference/cli-commands) · [gateway/pairing.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/pairing.py)
+> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [CLI commands reference](https://hermes-agent.nousresearch.com/docs/reference/cli-commands) · [gateway/pairing.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/pairing.py)
 
 The old guide showed an admin `/pair` command. The current docs do not document one. As documented, an unknown user who DMs the bot receives a one-time pairing code; the operator approves it from the CLI:
 
@@ -3109,7 +3118,7 @@ The docs state codes expire after 1 hour, are rate-limited and use cryptographic
 
 ### Admins and regular users
 
-> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/slash_access.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/slash_access.py)
+> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/slash_access.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/slash_access.py)
 
 Beyond "can this person reach the bot", an optional admin/user split gates slash commands per platform and per scope (DM versus group/channel). If `allow_admin_from` is not set for a scope the split is disabled and every allowed user has full access (backward compatible).
 
@@ -3129,13 +3138,13 @@ gateway:
 
 ### Other bots in a chat
 
-> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/bot_loop_guard.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/bot_loop_guard.py)
+> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/bot_loop_guard.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/bot_loop_guard.py)
 
 A sender is treated as a bot when the platform says so; on platforms without a bot flag, list peers under `bot_users`. A bot sender is admitted only through that platform's `*_ALLOW_BOTS` setting, never receives runtime notices, and `gateway.bot_loop_guard` ends bot-to-bot exchanges (documented defaults: `max_hops` 4; `enabled: false` turns the rules off).
 
 ## Platform adapters
 
-> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/platforms/base.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/platforms/base.py)
+> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/platforms/base.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/platforms/base.py)
 
 Every adapter extends `BasePlatformAdapter` and implements `connect()`, `disconnect()` and `send()` (with optional `send_typing()` and `get_chat_info()`); inbound events are normalized to a `MessageEvent` and forwarded with `handle_message()`.
 
@@ -3145,31 +3154,31 @@ Layout per the developer guide: most platforms are plugin-packaged adapters unde
 
 ### Deferred loading and the platform registry
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/platform_registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/platform_registry.py)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/platform_registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/platform_registry.py)
 
 Bundled `kind: platform` plugins register cheap deferred loaders so platform SDKs import only when the gateway starts, delivers, or runs setup/status, not on plain `hermes chat`. Resolution loads one adapter on lookup; full enumeration runs pending loaders only where every platform is needed.
 
 ### Token locks
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/status.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/status.py) · [gateway/restart.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/restart.py)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/status.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/status.py) · [gateway/restart.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/restart.py)
 
 Adapters with unique credentials call `acquire_scoped_lock()` in `connect()` and `release_scoped_lock()` in `disconnect()`, so two profiles cannot use the same bot token at once. A lock conflict is emitted as `{scope}_lock` with `retryable=True`, so a mid-run reconnect can recover. At startup a live foreign holder is treated as a configuration conflict: the platform is parked fatal, and with nothing else connected the gateway exits with code 78 (`EX_CONFIG`, `gateway_state=startup_failed`) so supervisors stop restarting it (the docs describe the systemd, s6 and launchd mechanisms).
 
 ### Relay (experimental)
 
-> Sources: [Hermes Relay](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/relay) · [Relay and Connector contract](https://hermes-agent.nousresearch.com/docs/developer-guide/relay-connector-contract) · [gateway/relay/descriptor.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/relay/descriptor.py)
+> Sources: [Hermes Relay](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/relay) · [Relay and Connector contract](https://hermes-agent.nousresearch.com/docs/developer-guide/relay-connector-contract) · [gateway/relay/descriptor.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/relay/descriptor.py)
 
 Both pages are marked experimental and subject to change without a deprecation cycle. When `GATEWAY_RELAY_URL` or `gateway.relay_url` is configured, the gateway registers a `relay` platform and dials out to an external connector over one WebSocket. The connector holds the platform credentials and sends a `CapabilityDescriptor` at handshake (`contract_version`, `platform`, `max_message_length`, streaming/edit/thread capabilities, markdown dialect, and optional fields); inbound events, outbound actions and interrupt frames ride that single socket, so the gateway opens no inbound port. `hermes gateway enroll` stores relay credentials. Shared-ingress platforms (the WhatsApp bridge and Relay) run on the default profile only under multiplexing.
 
 ### Writing a new adapter
 
-> Sources: [Adding a Platform Adapter](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters) · [gateway/platform_registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/platform_registry.py)
+> Sources: [Adding a Platform Adapter](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-platform-adapters) · [gateway/platform_registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/platform_registry.py)
 
 The guide recommends the plugin path: a directory with `plugin.yaml` (`kind: platform`, `requires_env` / `optional_env`) and `adapter.py` with a `register()` entry point calling `ctx.register_platform(...)`. The registration automatically wires adapter creation, config parsing, authorization env vars (`allowed_users_env` / `allow_all_env`), env-only auto-enable, the YAML-to-env bridge, cron delivery (`cron_deliver_env_var`), `hermes config` entries, the send engine, the channel directory, system-prompt hints, chunking and setup menus. Optional `PlatformEntry` fields include `trusted_inbound`, `display_tier`, `shared_env_prefixes`, `group_allowed_chats_env` and `allowlist_suppresses_pairing`; the guide recommends feature-detecting them with `dataclasses.fields(PlatformEntry)` for compatibility with older cores. The built-in path (editing the platform enum, config, runner, toolsets and docs) is documented as a multi-file checklist. The plugin system itself is section 20.
 
 ## Sessions and restart recovery
 
-> Sources: [Gateway Session Lifecycle](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle) · [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/session.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/session.py)
+> Sources: [Gateway Session Lifecycle](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-session-lifecycle) · [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [gateway/session.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/session.py)
 
 Data model per the lifecycle page: `SessionSource` (where a message came from: platform, chat id and type, user id, thread id, optional alternate ids, `is_bot`, guild/parent ids, message id, `role_authorized`), `SessionEntry` (session key to current `session_id`, token and cost counters, and state flags), and `SessionStore` (an in-memory dict persisted to `sessions.json`, with SQLite `SessionDB` as the canonical transcript and metadata store; see section 15).
 
@@ -3195,7 +3204,7 @@ When a memory provider plugin is enabled the gateway builds an `AIAgent` per mes
 
 ## Delivery
 
-> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/delivery_ledger.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/delivery_ledger.py) · [gateway/delivery.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/delivery.py)
+> Sources: [Messaging Gateway](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/) · [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/delivery_ledger.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/delivery_ledger.py) · [gateway/delivery.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/delivery.py)
 
 Delivery modes per the developer guide: direct reply to the originating chat, home-channel delivery (cron outputs and background results), explicit-target delivery (`platform:<target>`, also exposed through the `hermes send` CLI), and cross-platform delivery. A bare platform name delivers to that platform's configured home channel; the original guide's target table (`origin`, `local`, `telegram:<chat_id>:<thread_id>` and so on) is now maintained in the cron documentation (section 19).
 
@@ -3205,7 +3214,7 @@ Cron delivery and session history: the developer guide states cron job deliverie
 
 ## Hooks
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [Event Hooks](https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks) · [gateway/hooks.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/hooks.py)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [Event Hooks](https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks) · [gateway/hooks.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/hooks.py)
 
 Gateway hooks are discovered from `<profile home>/hooks/` (so `~/.hermes/hooks/` for the default profile and one directory per served profile under multiplexing). Each hook is a directory with `HOOK.yaml` and `handler.py`; the handler must define `handle(event_type, context)` (sync or async), and errors are caught and logged rather than crashing the agent.
 
@@ -3243,7 +3252,7 @@ Profile scoping and the `--all` flag are described differently by two pages, so 
 
 ### `hermes gateway ensure` and `attach`
 
-> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [hermes_cli/gateway_runtime_attach.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/gateway_runtime_attach.py)
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [hermes_cli/gateway_runtime_attach.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/gateway_runtime_attach.py)
 
 Clients (Desktop, `hermes chat`, the TUI) discover or start the profile's runtime with `hermes gateway ensure --json --timeout 60`. It never installs or rewrites services; an existing service takes precedence, and it fails closed on ambiguous ownership (reason codes such as `profile_mismatch`, `service_account_mismatch`, `service_identity_unverified`). Exit codes: `0` ready, `2` invalid invocation, `3` incompatible protocol, `4` authorization or profile mismatch, `5` deadline reached, `6` draining or update in progress, `7` inaccessible or startup failure. `hermes gateway attach --json` is the public attach step for a local client with its own UI: it prints one JSON line with a WebSocket `url`, `protocols` and a single-use `ticket` (30-second expiry, bound to the profile and the owner's instance id); flags are `--start`, `--recover` and `--timeout S`. Dial from loopback with no `Origin` header and speak `hermes-gateway-v1`.
 
@@ -3255,7 +3264,7 @@ Documented behaviors: `SIGUSR2` appends every thread's stack to a faulthandler l
 
 ## Multiplexed profiles
 
-> Sources: [Multiplexing Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway) · [Running Many Gateways at Once](https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways) · [hermes_cli/profiles.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/profiles.py)
+> Sources: [Multiplexing Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/multiplexing-gateway) · [Running Many Gateways at Once](https://hermes-agent.nousresearch.com/docs/user-guide/multi-profile-gateways) · [hermes_cli/profiles.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/profiles.py)
 
 Per the docs, `gateway.multiplex_profiles` defaults to `true` with a safety rule: an unset flag is settled at each boot by a preflight (the same one as `hermes gateway migrate --multiplex`); if nothing blocks, the gateway multiplexes and writes `true` into the default profile's `config.yaml`. An explicit `true` bypasses the preflight; `false` is documented as retired and is rewritten to `true`. A named profile can set `gateway.standalone: true` as a temporary compatibility shim to keep its own gateway. `GATEWAY_MULTIPLEX_PROFILES` overrides the unset decision.
 
@@ -3297,10 +3306,25 @@ The composed gateway listener can create fresh local CLI, TUI or GUI sessions as
 - Native admission startup recovery re-runs only never-started queued work after adapters connect, and rechecks authorization.
 - Revision-checked metadata: `session.mutate` (rename, archive; canonical reset, delete, rewind, model, branch and compression use the same receipt boundary) with `expected_revision`, idempotent receipts and `revision_conflict` / `admission_conflict` errors.
 - Private native HTTP authentication uses a fresh one-use grant from the same-user control socket (30-second expiry) in the `X-Hermes-Gateway-Ticket` header, requiring a loopback peer and no `Origin` header. The docs call this a same-OS-user administrative boundary, not an OAuth bypass.
+- **The control socket answers `resolve-profile`.** A local client that dials the gateway directly had to spawn `hermes gateway attach --json` (a Python start) for every connect, because only Python could work out the endpoint, and it is subtle when a multiplexer serves the profile. The gateway now answers that lookup itself: `RESOLVE_VERB = "resolve-profile"`, `RESOLVE_PROTOCOL = 1`. The answer names the gateway that serves a profile home and how to dial it, and it is built from the same discovery primitives `hermes gateway attach` runs. **It carries no credential** — the ticket comes from `session-ticket` on the same socket. The module docstring names it part of the **public local control-socket contract** documented in `website/docs/developer-guide/gateway-internals.md` ("Local control socket").
 
 Canonical group metadata (see Group Chats below) and ancillary reads (`session.control.read`, `process.list`, `subagent.list`, `subagent.tail`) are also exposed on the authenticated WebSocket; the docs state ancillary polls never restore a cold session.
+### Stored transcript reads (`session.transcript`)
+
+> Sources: [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals) · [gateway/session_transcript_rows.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/session_transcript_rows.py) · [gateway/session_transcript_subagent.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/session_transcript_subagent.py) · [hermes_state_stored_reads.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state_stored_reads.py)
+
+`session.transcript` is the **one** stored-transcript read on the gateway. `session.compactions` and `subagent.transcript` are not separate verbs: upstream grep finds neither string in the source, and the subagent read was ported into `session.transcript`.
+
+- **Forward polling.** The cursor is oldest-order and is never null. It holds the segment it read and the `transcript_cursor_state` of the rows it covered; while both hold, the next read continues after it (`reset: false`, appends only). An in-place compaction, a rotation, a rewind, or a rewrite or deletion of a covered row answers `reset: true` from the first page.
+- **Row kinds.** Every row carries `row_kind`. `'message'` is a display row, exactly as `session.resume`'s `display_messages` projects it. `'compaction'` is a compaction handoff at its position in the transcript: `role: 'system'`, `text` is the summary a *reader* sees (the `agent.compaction_display.compaction_summary` text — without the preamble, end marker, re-quoted user messages and recovery footer written for the model), plus `compacted_messages` (how many messages it summarized, when the handoff names it), `timestamp` and the stored `row_id`. The display projection drops a handoff; the transcript read puts each one back as its own row just before the row it was stored on. A later compaction can carry, re-wrap or unwrap a summary carrier, and the display dedupe then shows one copy of that message; the older handoffs on its earlier copies (`transcript_handoff_rows`) are still shown, each once.
+- **A delegated child's transcript.** Read under the *parent's* authority. A running child is the one the parent's roster names (the `subagent.list` rule, nested children included); a finished one is found by the `subagent_id` stamped on its row, and **only when its ancestry reaches this conversation** through delegate-child or compression-continuation hops. Anything else answers `available: false`. A child is a session of its own in the owning profile's store, written message by message while it runs, but `session.resume` refuses it and `subagent.list` rows are live-registry projections — this read joins the two.
+- **A stored session can be read without attaching** (picker fields, transcript pages, compactions), and a delegated child stays addressable by `subagent_id` — `subagent.list` rows name its session.
+- **A client can name itself on `session.create`**, and the shared gateway client takes its session source and client name.
+
 
 ## Group Chats (Bot Mode)
+
+> Changed 2026-11-08 (upstream `acdc8f1ba6`): a group chat can run **without Desktop** (`75d15b6040`), every new group chat runs **on a gateway** (`21cd0af57d`), any served profile can be **lent to another gateway's** group chat (`9a7931dc31`), and bots **from other computers** can be seated in group chats (`d477427cae`). The Webapp and Desktop gained a saved-gateways story in the same window: one machine-wide saved-gateways store shared by Desktop and the Webapp (`44fff7e17b`), saved connections reached through the forwarding proxy (`44901b1db9`), a signed-in Webapp relayed to other gateways (`965172c498`), a saved SSH gateway reached from Hermes rather than Electron (`7479098100`), sign-in to an oauth-mode saved gateway from the server (`88f5bc6299`), and saved gateways reached through the reach module with sign-in from the Webapp (`0a6a2a34b3`).
 
 > Sources: [Bot Mode](https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode) · [Gateway Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/gateway-internals)
 
@@ -3612,12 +3636,12 @@ The `cron.delivery` push settings in detail, Telegram cron-topic routing, `workd
 ---
 
 # 20. Plugin System
-> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins) · [Plugin Catalog](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins.py) · [hermes_cli/plugins_context.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins_context.py) · [hermes_cli/plugins_manifest.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins_manifest.py)
+> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins) · [Plugin Catalog](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins.py) · [hermes_cli/plugins_context.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins_context.py) · [hermes_cli/plugins_manifest.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins_manifest.py)
 
 Everything below is derived from the upstream docs and source at SHA `9f23c43` (docs-only review; nothing here was executed). The old description of "three discovery sources" and "four plugin types" no longer matches the documented system, which now covers several loaders, a reviewed catalog, update tooling, a consent layer and an optional out-of-process host.
 
 ## Overview: what a plugin can do
-> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins_context.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins_context.py)
+> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins_context.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins_context.py)
 
 A general plugin is a directory with a `plugin.yaml` manifest and an `__init__.py` exposing `register(ctx)`. The `ctx` object (`PluginContext`, `hermes_cli/plugins_context.py`) is the only supported way to extend Hermes. The docs' capability table, condensed:
 
@@ -3646,7 +3670,7 @@ Notes the docs call out:
 - Tool handlers have the signature `def handler(args: dict, **kwargs) -> str` and always return a JSON string (see section 22).
 
 ## Plugin kinds, locations and discovery
-> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins_manifest.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins_manifest.py) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins.py) · [plugins/memory/__init__.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/plugins/memory/__init__.py)
+> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins_manifest.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins_manifest.py) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins.py) · [plugins/memory/__init__.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/plugins/memory/__init__.py)
 
 `plugin.yaml` may carry a `kind`. The valid set in source is `standalone`, `backend`, `exclusive`, `platform`, `model-provider` (an unknown value is warned about and treated as `standalone`; memory and model providers without a declared kind are auto-detected from `__init__.py`).
 
@@ -3678,7 +3702,7 @@ Two ordering rules differ by loader: general plugins and model providers use "la
 **Project-local plugins (docs conflict, flagged).** The Built-in Plugins page still lists `./.hermes/plugins/` as requiring `HERMES_ENABLE_PROJECT_PLUGINS=1`. The newer Plugins page states that the gateway never loads project-local plugins (every session, including `hermes`, the TUI, Desktop, messaging and cron, runs in the one gateway), so the variable has no effect on sessions and Hermes only prints a warning; `gateway/session_local.py` contains that warning. The memory loader still reads the variable for its own project scan. Treat the Plugins page as authoritative: install the plugin to `~/.hermes/plugins/` and enable it.
 
 ## Opt-in model: enabling and disabling
-> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins.py)
+> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins.py)
 
 General plugins and user-installed backends are disabled by default. Discovery lists them (`hermes plugins`, `/plugins`) but nothing loads until the name is in `plugins.enabled`. A name in `plugins.disabled` always wins.
 
@@ -3707,7 +3731,7 @@ context:
 The docs also describe a one-time migration: user plugins already installed when opt-in plugins arrived (config schema v21) were grandfathered into `plugins.enabled`; bundled standalone plugins were not.
 
 ## Managing plugins from the CLI
-> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [CLI Commands Reference](https://hermes-agent.nousresearch.com/docs/reference/cli-commands) · [Plugin Catalog](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins.py)
+> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [CLI Commands Reference](https://hermes-agent.nousresearch.com/docs/reference/cli-commands) · [Plugin Catalog](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins.py)
 
 Subcommands documented on the Plugins page and CLI reference:
 
@@ -3729,7 +3753,7 @@ Subcommands documented on the Plugins page and CLI reference:
 In a chat session the equivalents are `/plugins`, `/plugins update` and `/plugins auto-update [on|off]`; Desktop and the web dashboard expose an Update all action and an Auto-update switch.
 
 ### Updates and auto-update (opt-in)
-> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins.py)
+> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins.py)
 
 - Install provenance (source, revision, pin status) is recorded in the profile-local `plugins/.install-metadata.json`; it holds no config values, secrets or capability grants.
 - `--ref` accepts only a full 40-character commit SHA (tags, branches and abbreviated SHAs are not accepted). A pinned plugin is never moved by `hermes plugins update`; re-pin with `install <source> --force --ref <new-commit>`.
@@ -3739,7 +3763,7 @@ In a chat session the equivalents are `/plugins`, `/plugins update` and `/plugin
 - A manifest that adds or changes `update_url` is refused until `hermes plugins trust-update-url NAME`.
 
 ### Dependencies, scanning and isolation
-> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins.py)
+> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins.py)
 
 - **Python dependencies.** Declared via `python_dependencies` in `plugin.yaml` (or a `pyproject.toml`). Install requests consent; enabling prepares the union of core, extras and all enabled plugins through PM (the package manager). A failed resolution preserves the previous selection, and a declined or non-interactive install can leave the plugin installed but disabled.
 - **Install-time security scan.** Every install and update scans the plugin tree. Verdicts: `safe` (silent), `caution` (confirm, or `--force`), `dangerous` (blocked; `--force` does not override).
@@ -3747,7 +3771,7 @@ In a chat session the equivalents are `/plugins`, `/plugins update` and `/plugin
 - **Not a sandbox.** Capabilities and scans are consent and audit layers; plugins otherwise run as regular Python with the user's permissions.
 
 ## Plugin catalog and trust tiers
-> Sources: [Plugin Catalog](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog) · [Submitting to the Plugin Catalog](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission) · [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [plugin-catalog/README.md](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/plugin-catalog/README.md)
+> Sources: [Plugin Catalog](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugin-catalog) · [Submitting to the Plugin Catalog](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/catalog-submission) · [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [plugin-catalog/README.md](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/plugin-catalog/README.md)
 
 The catalog is a curated directory of one YAML file per plugin under `plugin-catalog/` in the hermes-agent repository, browsable at `/docs/plugins` on the docs site (shelves such as Memory, Desktop, Platforms, Web & Browser, Tools, Voice, Automation, Models). Do not quote an entry count from here; the v0.23.0 release notes say it grew from "about 600 to over 1,050" at release time, and the way to enumerate it is `hermes plugins search` (omit the term to list everything) or `hermes plugins browse`, or the `plugin-catalog/` directory itself.
 
@@ -3764,7 +3788,7 @@ Tiers (the `tier` field; only Nous maintainers set the first two):
 Trust model in brief: human-merged admission PRs only; mandatory exact SHA pins (branches, tags and short SHAs rejected); no self-updating code in listed plugins; SHA bumps are new reviewed PRs; declared capabilities must match what the plugin registers; the install scanner runs at admission (a catalog install at exactly the pinned SHA does not re-prompt for `caution`, `dangerous` still blocks); desktop plugins must stay inside the SDK surface; a `removed.yaml` list blocks installs and updates of pulled plugins. The docs state plainly that "cataloged is not audited". `hermes plugins install <name>` installs disabled; enabling is a separate step.
 
 ## Manifest (`plugin.yaml`) and compatibility contract
-> Sources: [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [Public plugin API](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api) · [hermes_cli/plugins_manifest.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins_manifest.py) · [hermes_cli/data/plugin_api.json](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/data/plugin_api.json) · [hermes_cli/plugin_capabilities.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugin_capabilities.py)
+> Sources: [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [Public plugin API](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/public-api) · [hermes_cli/plugins_manifest.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins_manifest.py) · [hermes_cli/data/plugin_api.json](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/data/plugin_api.json) · [hermes_cli/plugin_capabilities.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugin_capabilities.py)
 
 Minimal manifest:
 
@@ -3782,15 +3806,15 @@ capabilities:                # privileged surfaces; consent flow
 
 `provides_tools` does not decide whether tools load once the plugin is enabled; it drives `hermes plugins validate` (declared-vs-registered check), catalog chips, and dashboard auth hints. The additive manifest v2 fields (all optional; a manifest without `manifest_version` is v1 forever) include `manifest_version`, `api_version`, `requires_plugins` (advisory; load order honours it), `python_dependencies`, `python_runtime`, `config_schema` (settings under `plugins.entries.<id>.settings`, also drives the Desktop settings form), `config_keys`, `license`, `homepage`, `tags`, `provides_locales`, `requires_auth` and `oauth`. Unknown fields are ignored with a warning.
 
-Compatibility contract (documented): behaviour-based rather than a single API version; `PluginContext` methods are not removed or renamed; hook payloads grow as additive keyword fields (callbacks should accept `**kwargs`); a deprecation requires at least two minor releases of support. Replacing or patching core functions, methods or tables at runtime is not a supported extension point and is refused by catalog validation (`no core override`). The docs add that the Sep 2026 module decomposition removed the old internal import paths, so a plugin importing them fails with `ImportError`. The list of Hermes modules plugins may import is the generated Public plugin API page, backed by `hermes_cli/data/plugin_api.json`; `hermes plugins validate` warns on other Hermes imports.
+Compatibility contract (documented): behaviour-based rather than a single API version; `PluginContext` methods are not removed or renamed; hook payloads grow as additive keyword fields (callbacks should accept `**kwargs`); a deprecation requires at least two minor releases of support. Replacing or patching core functions, methods or tables at runtime is not a supported extension point and is refused by catalog validation (`no core override`). The docs add that the Sep 2026 module decomposition removed the old internal import paths, so a plugin importing them fails with `ImportError`. The list of Hermes modules plugins may import is the generated Public plugin API page, backed by `hermes_cli/data/plugin_api.json`; `hermes plugins validate` warns on other Hermes imports. **`redact_sensitive_text` is on that list** (changed upstream `79109635df`): a plugin that sends user text to a model (`ctx.llm`) needs to mask the secrets in it first, and `agent.redact.redact_sensitive_text` did that but was a private import, so validation warned on it. It is now listed in `hermes_cli/data/plugin_api.json` and the public API page is regenerated.
 
 ### Capabilities and consent
-> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugin_capabilities.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugin_capabilities.py)
+> Sources: [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugin_capabilities.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugin_capabilities.py)
 
 Declared capabilities are shown at `install`/`enable` time and granted once; grants are stored under `plugins.entries.<id>.granted_capabilities`. Known ids: `tools.override`, `llm.provider_override`, `llm.model_override`, `llm.agent_id_override`, `llm.profile_override`, `llm.task_override`, `llm.side_question`, `gateway.platform_actions`. Non-interactive installs and updates fail closed (nothing is granted). A plugin should probe with `ctx.has_capability(...)` and degrade. Legacy per-feature keys (for example `allow_tool_override`) still work but are deprecated. `ctx.llm` calls run against the user's active provider and model by default; provider/model/agent/profile overrides raise a trust error until granted (see the Plugin LLM Access page).
 
 ## Hooks, middleware and observers
-> Sources: [Event Hooks](https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks) · [Observer Hooks](https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks) · [Middleware](https://hermes-agent.nousresearch.com/docs/developer-guide/middleware) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins.py) · [hermes_cli/middleware.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/middleware.py)
+> Sources: [Event Hooks](https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks) · [Observer Hooks](https://hermes-agent.nousresearch.com/docs/developer-guide/observer-hooks) · [Middleware](https://hermes-agent.nousresearch.com/docs/developer-guide/middleware) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins.py) · [hermes_cli/middleware.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/middleware.py)
 
 Hermes documents four hook systems: gateway event hooks (`HOOK.yaml` + `handler.py` under `~/.hermes/hooks/`, gateway only), plugin hooks (`ctx.register_hook`), shell hooks (`hooks:` in `config.yaml`) and outbound webhooks (`hooks.outbound:`). The authoritative list of plugin hook names is the `VALID_HOOKS` set in `hermes_cli/plugins.py`.
 
@@ -3818,7 +3842,7 @@ Middleware changes behaviour rather than observing it. The four kinds (`VALID_MI
 A raising middleware is logged and skipped; payloads carry `middleware_schema_version = "hermes.middleware.v1"`. Order for an LLM call: build kwargs, `llm_request`, `pre_api_request`, `llm_execution`, `post_api_request`/`api_request_error`. For a tool call: coerce args, `tool_request`, availability/guardrails/approval, `tool_execution`, `post_tool_call`, `transform_tool_result`.
 
 ## Specialised plugin types and their guides
-> Sources: [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Model Provider Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin) · [hermes_cli/plugins_context.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins_context.py)
+> Sources: [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [Model Provider Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin) · [hermes_cli/plugins_context.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins_context.py)
 
 | Want to add | Registration | Guide |
 |---|---|---|
@@ -3841,7 +3865,7 @@ A raising middleware is logged and skipped; payloads carry `middleware_schema_ve
 Guide pages: [Model Provider Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/model-provider-plugin), [Context Engine Plugins](https://hermes-agent.nousresearch.com/docs/developer-guide/context-engine-plugin), [Image Generation](https://hermes-agent.nousresearch.com/docs/developer-guide/image-gen-provider-plugin), [Video Generation](https://hermes-agent.nousresearch.com/docs/developer-guide/video-gen-provider-plugin), [Web Search](https://hermes-agent.nousresearch.com/docs/developer-guide/web-search-provider-plugin), [Browser Provider](https://hermes-agent.nousresearch.com/docs/developer-guide/browser-provider-plugin), [Terminal Environment](https://hermes-agent.nousresearch.com/docs/developer-guide/terminal-environment-plugin), [Secret Source](https://hermes-agent.nousresearch.com/docs/developer-guide/secret-source-plugin), [Delegation Provider](https://hermes-agent.nousresearch.com/docs/developer-guide/delegation-provider-plugin), [Browser Vault](https://hermes-agent.nousresearch.com/docs/developer-guide/browser-vault-plugin), [Plugin LLM Access](https://hermes-agent.nousresearch.com/docs/developer-guide/plugin-llm-access), [Desktop Plugin SDK](https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk). Plugins that front a desktop application can also declare an `app:` / `requires:` block (presence, version, GPU) described on the Application declarations page; per that page, the loader integration is separate work and core does not read plugin YAML for it automatically.
 
 ## Bundled plugins and policy
-> Sources: [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins.py)
+> Sources: [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/built-in-plugins) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [hermes_cli/plugins.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins.py)
 
 The Built-in Plugins page lists, as shipped and opt-in: `disk-cleanup` (hooks plus slash command), `security-guidance` (hooks on `write_file`/`patch`), `teams_pipeline`, `google_meet`, three `image_gen/*` backends, `hermes-achievements` and `kanban/dashboard` dashboard tabs. Memory providers and context engines are excluded from bundled scanning and listed on the Memory Providers page. The v0.23.0 release notes describe several features (Camofox, `mcp-serve`, agent importers, Singularity, Copilot) moving out of core into plugins that install themselves for existing users; so `hermes mcp serve` is now `hermes mcp-serve` (provided by the `mcp-serve` plugin). The developer guide also states the policy that plugins integrating someone else's product ship as standalone repos rather than into the core tree.
 
@@ -3850,14 +3874,14 @@ Not covered here: per-plugin authoring detail, Desktop SDK slots, plugin RPC and
 ---
 
 # 21. Memory Provider Plugin Development
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [Memory Providers](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_provider.py) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_manager.py) · [plugins/memory/__init__.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/plugins/memory/__init__.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [Memory Providers](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_provider.py) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_manager.py) · [plugins/memory/__init__.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/plugins/memory/__init__.py)
 
 A memory provider gives Hermes persistent, cross-session knowledge in addition to the built-in `MEMORY.md` / `USER.md`, which stay active alongside it. Providers are single-select (`memory.provider`), managed with `hermes memory setup|status|off` or `hermes plugins` > Provider Plugins > Memory Provider. Contract source: `agent/memory_provider.py`; orchestration: `agent/memory_manager.py`.
 
 Which providers ship in-tree has changed: at this SHA the Memory Providers page says Hermes ships two external provider plugins (RetainDB and ByteRover; `plugins/memory/` contains `byterover` and `retaindb`), while Honcho, Hindsight, Supermemory, Mem0, OpenViking and Holographic are installed from the plugin catalog (`hermes plugins install <name>`). The page says RetainDB and ByteRover leave core on October 15, 2026. The bundled set is closed to new providers.
 
 ## Installation layouts and discovery
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [plugins/memory/__init__.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/plugins/memory/__init__.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [plugins/memory/__init__.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/plugins/memory/__init__.py)
 
 Four sources, precedence order (earlier wins on a name collision; this is the reverse of general plugins):
 
@@ -3889,7 +3913,7 @@ def register(ctx) -> None:
 A provider may also call `ctx.register_skill(...)`; such skills are qualified by the entry-point name (`my-provider:maintenance`) and load only while that provider is active.
 
 ## MemoryProvider ABC
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_provider.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_provider.py)
 
 In source, exactly four members are `@abstractmethod`: the `name` property, `is_available()`, `initialize(session_id, **kwargs)` and `get_tool_schemas()`. Everything else has a default. (The developer guide's tables also mark `get_config_schema()` and `save_config()` as "yes" for setup-wizard use; in source they default to `[]` and a no-op, and `save_config` must be overridden unless every field is env-var only.)
 
@@ -3920,7 +3944,7 @@ Initialization kwargs documented: `hermes_home`, `platform` (`cli`, `gui`, `acp`
 Secrets inside providers should be read through `agent.secret_scope.get_secret`, not raw environment lookups. The Memory Providers page also states that everything handed to a provider (turns, tool output, recall queries, mirrored writes) passes through a secret scrub first.
 
 ## Setup UX, config schema and storage
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_provider.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_provider.py)
 
 A standalone (catalog) provider keeps every setup surface through files in its own directory: `get_config_schema()` / `save_config()` / `post_setup()` for `hermes memory setup`, `config_schema.py` for the Desktop panel, `cli.py` for subcommands, and `pyproject.toml` for dependencies. Fields with `secret: True` and an `env_var` are written to `.env`; non-secret values go to `save_config()`. Keep the schema minimal (only what the user must configure) and document optional settings in a provider config file under `$HERMES_HOME`.
 
@@ -3929,7 +3953,7 @@ A standalone (catalog) provider keeps every setup surface through files in its o
 A provider's name, `memory.<name>` config section, data directory and tool names are the contract with existing users. When a bundled provider moves to the catalog, `hermes update` installs the catalog plugin for every profile whose `memory.provider` names it (and once at agent start when `security.allow_lazy_installs` is on).
 
 ## Threading contract
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_provider.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_provider.py)
 
 `sync_turn()` must not block. Run backend work in a daemon thread spawned with `agent.memory_provider.spawn_context_thread(target, name=...)` (never a bare `threading.Thread`): profile isolation (active `HERMES_HOME` override and the per-turn secret scope) lives in `contextvars`, and a plain thread starts with an empty context, so under multiplexed profiles it would write into the default profile's store and `get_secret()` would fail closed. The source module also exposes `ctx_bound(fn)` for executors. The same rule applies to prefetch and writer threads. Small JSON sidecars use `utils.read_json_or_empty` / `utils.atomic_json_write`; edits to `config.yaml` go through `hermes_cli.config.save_config(..., merge_existing=True)`.
 
@@ -3951,7 +3975,7 @@ def sync_turn(self, user_content, assistant_content, *, session_id="", messages=
 ```
 
 ## Profile isolation (critical)
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_manager.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_manager.py)
 
 All storage paths must derive from the `hermes_home` kwarg of `initialize()`, never a hard-coded `~/.hermes`:
 
@@ -3967,12 +3991,12 @@ data_dir = Path("~/.hermes/my-provider").expanduser()
 On a multiplexed gateway several profiles run turns concurrently, each with its own `MemoryManager` and provider instance. The docs require: return a new instance per load (no module-level singleton; the manager refuses an instance another profile already bound and logs `memory_provider_instance_shared`); bind every path, client and tenant from `initialize()`; keep nothing profile-specific at module or class level. The manager runs tool calls and hooks only from the profile an instance was initialized for, and refuses callers that name no profile (`memory_caller_profile_unresolved`). `handle_tool_call` also receives `hermes_home`, `agent_identity` and `caller_gsk`; assert on them but do not rebind from them. Hermes cannot verify a provider's internals.
 
 ## Single provider rule
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [Memory Providers](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_manager.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [Memory Providers](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_manager.py)
 
 Only one external provider can be active. The `MemoryManager` rejects a second registration with a warning ("Only one external memory provider is allowed", in `agent/memory_manager.py`), to avoid tool-schema bloat and conflicting backends. Values `""`, `default`, `builtin`, `built-in`, `none` for `memory.provider` mean built-in only (`CORE_MEMORY_PROVIDER_SENTINELS` in `agent/memory_provider.py`). Forks that run without a provider (delegated subagents and similar) get no prefetch or turn sync; `initialize()`, `on_session_switch()` and `on_pre_compress()` still run when the checkpoint gate is armed.
 
 ## Adding CLI commands
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [plugins/memory/__init__.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/plugins/memory/__init__.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [plugins/memory/__init__.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/plugins/memory/__init__.py)
 
 Add `cli.py` to the provider directory with `register_cli(subparser)` that builds an argparse tree; it is discovered at startup (`discover_plugin_cli_commands()`) and appears as `hermes <provider-name> <subcommand>`. Commands only appear when the provider is the active `memory.provider`. Package (entry-point) providers get this too, provided the entry point targets a package so `cli.py` and `config_schema.py` sit next to `__init__.py`.
 
@@ -3990,13 +4014,13 @@ def register_cli(subparser) -> None:
 ```
 
 ## Pre-compression checkpoints and oversized recall
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_provider.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_provider.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_provider.py)
 
 - **Checkpoint API v2 (opt-in).** `on_pre_compress()` is best-effort by default. A provider that archives transcript evidence can set `pre_compress_checkpoint_api_version = 2` and raise on failure. With `compression.checkpoint_required: true` (default `false`) compression fails closed (`BLOCKED_MISSING_PREREQUISITE`) unless an active provider completed its checkpoint. The docs state that none of the bundled providers advertise v2, so enabling the gate without a third-party archiving provider blocks every compression attempt. Checkpoints must be idempotent (key writes by content). The gate also suppresses native/micro compaction paths; see the page for the full list.
 - **Oversized prefetch.** External `prefetch()` results are returned in full by default; `memory.prefetch_spill_enabled: true` (default `false`) spills results above `hooks.output_spill.max_chars` to a private file with a head/tail preview.
 
 ## Packaging, survival and testing
-> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/memory_manager.py)
+> Sources: [Memory Provider Plugins (developer guide)](https://hermes-agent.nousresearch.com/docs/developer-guide/memory-provider-plugin) · [agent/memory_manager.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/memory_manager.py)
 
 Wrapper-style providers that keep a sidecar venv should propagate `HERMES_HOME`; ordinary Hermes updates do not delete `$HERMES_HOME/plugins/**`, whereas `hermes plugins remove`, `hermes uninstall` and profile deletion do. For tests the docs point to `tests/agent/test_memory_provider.py` and adjacent files and show the manager flow:
 
@@ -4014,8 +4038,10 @@ Not covered: per-provider behaviour (see the Memory Providers page), dashboard r
 
 ---
 
-# 22. Adding Custom Tools
-> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/registry.py) · [model_tools.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/model_tools.py) · [toolsets.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/toolsets.py)
+## Adding Custom Tools
+
+> Changed 2026-11-08 (upstream `63cdc15eb3`): the clipboard image extractor is now a documented, device-local CLI surface — `hermes clipboard image --json`, exposing `hermes_cli.clipboard.save_clipboard_image` with a JSON reply and stable reason codes. Third-party clients previously read the clipboard image by running the TUI's private helper script with `PYTHONPATH` pointed at the source tree.
+> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/registry.py) · [model_tools.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/model_tools.py) · [toolsets.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/toolsets.py)
 
 Decision order (from the docs): first ask whether the capability should be a skill (instructions plus shell and existing tools). If it needs API keys, custom processing, binary data or streaming, it is a tool. Then choose the route:
 
@@ -4027,7 +4053,7 @@ Decision order (from the docs): first ask whether the capability should be a ski
 The Adding Tools page is explicit that it covers built-in core tools only and that plugins are the default for custom tools.
 
 ## Route A: a plugin tool
-> Sources: [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [hermes_cli/plugins_context.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/plugins_context.py) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/registry.py)
+> Sources: [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins/) · [Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins) · [hermes_cli/plugins_context.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/plugins_context.py) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/registry.py)
 
 Inside a plugin's `register(ctx)`:
 
@@ -4040,7 +4066,7 @@ def register(ctx):
 Handler rules from the developer guide: signature `def handler(args: dict, **kwargs) -> str`; always return a JSON string for success and error alike; never raise; Hermes forwards only the context keywords the signature names (`task_id`, `session_id`, `conversation_id`, `user_task`, `parent_agent`, ...), so `**kwargs` opts into the full set. Key per-conversation state on `conversation_id` (stable for the conversation) rather than `session_id` (can change when compression rotates the transcript). A registration that would shadow a built-in tool from a different toolset is rejected unless `override=True`, which additionally requires the `tools.override` capability grant (or legacy `plugins.entries.<id>.allow_tool_override: true`). Declare every tool in `provides_tools` so `hermes plugins validate` can check it, and test with `hermes plugins doctor . --ci`. Enable with `hermes plugins enable <name>`; tools appear alongside built-ins (see section 20).
 
 ## Route B: a built-in core tool (two files)
-> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/registry.py) · [toolsets.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/toolsets.py) · [model_tools.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/model_tools.py)
+> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/registry.py) · [toolsets.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/toolsets.py) · [model_tools.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/model_tools.py)
 
 1. `tools/your_tool.py`: handler, schema, check function and a top-level `registry.register()` call.
 2. `toolsets.py`: add the tool name to `_HERMES_CORE_TOOLS` (all platforms) or to a specific toolset entry.
@@ -4082,7 +4108,7 @@ registry.register(
 `registry.register()` parameters (Tools Runtime page): `name`, `toolset`, `schema`, `handler`, optional `check_fn`, `requires_env`, `is_async`, `description`, `emoji`. `schema["description"]` is the authoritative model-facing text; the separate `description=` only fills registry metadata.
 
 ## Critical rules
-> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/registry.py)
+> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/registry.py)
 
 - Handlers must return a JSON string (`json.dumps`), never a raw dict.
 - Errors are returned as `{"error": "message"}`, not raised. As a safety net `registry.dispatch()` and `handle_function_call()` wrap exceptions into error JSON.
@@ -4091,7 +4117,7 @@ registry.register(
 - Dynamic schema patching: after filtering, schemas such as `execute_code`, `browser_cdp` and `delegate_task` are adjusted to reference only tools that passed filtering.
 
 ## Async handlers, task_id and agent-loop tools
-> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/registry.py) · [agent/tool_executor.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/tool_executor.py)
+> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/registry.py) · [agent/tool_executor.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/tool_executor.py)
 
 Mark coroutine handlers with `is_async=True`; the registry bridges through `_run_async()` (persistent loop on the CLI path, a disposable thread with `asyncio.run()` when a loop is already running, per-thread loops for parallel tool workers). Never call `asyncio.run()` yourself.
 
@@ -4112,7 +4138,7 @@ tool_call -> agent loop -> model_tools.handle_function_call
 ```
 
 ## Setup-wizard integration (OPTIONAL_ENV_VARS)
-> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [hermes_cli/config_defaults.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/config_defaults.py)
+> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [hermes_cli/config_defaults.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/config_defaults.py)
 
 If the tool needs an API key, register it in `OPTIONAL_ENV_VARS`. The Adding Tools page still shows `hermes_cli/config.py`, but at this SHA the dictionary is defined in `hermes_cli/config_defaults.py` (`hermes_cli/config.py` imports it from there), so edit the defining module:
 
@@ -4129,12 +4155,12 @@ OPTIONAL_ENV_VARS = {
 ```
 
 ## Toolsets and enumeration
-> Sources: [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [toolsets.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/toolsets.py)
+> Sources: [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [toolsets.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/toolsets.py)
 
 Toolsets are named bundles resolved from explicit enabled/disabled lists, platform presets (`hermes-cli`, `hermes-telegram`, `hermes-acp`, ...), dynamic MCP toolsets and special sets; `model_tools.get_tool_definitions(enabled_toolsets, disabled_toolsets, quiet_mode)` resolves them and then applies registry `check_fn` filtering. Legacy `*_tools` toolset names map through `_LEGACY_TOOLSET_MAP`. Do not count tools from this page; use `hermes tools --summary` and the Built-in Tools / Toolsets reference pages.
 
 ## Checklist
-> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [toolsets.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/toolsets.py)
+> Sources: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) · [toolsets.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/toolsets.py)
 
 - Decided plugin versus core (plugins by default).
 - Handler returns JSON strings; errors as `{"error": ...}`.
@@ -4457,15 +4483,17 @@ Built-in commands are defined once in `COMMAND_REGISTRY`; handlers live in `cli.
 
 ---
 
-# 25. Security Model
+## Security Model
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [SECURITY.md](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/SECURITY.md) · [tools/approval.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/approval.py)
+> Changed 2026-11-08 (upstream `75b5168822`): the real Chrome/Brave profile's saved logins are exposed as a **read-only** vault login source under the handle prefix `browser:`, enabled exactly when `browser.use_real_profile` is on — the same consent that already snapshots the profile's cookies and Login Data. The entries appear in the in-app Browser bar's key-button picker beside the Hermes vault / Bitwarden / 1Password sources. The gate is confirmed in source: `hermes_cli/config_defaults.py` carries `"use_real_profile": False` by default, next to the provider / `cdp_url` comment.
+
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [SECURITY.md](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/SECURITY.md) · [tools/approval.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/approval.py)
 
 The Security page describes a defense-in-depth model with eight layers: user authorization, dangerous-command approval, file-write safety, container isolation, MCP credential filtering, context-file scanning, cross-session isolation, and input sanitization of terminal working directories. The repo-root `SECURITY.md` adds the formal trust model, which is the most important framing for this section: **the only security boundary against an adversarial LLM is the operating system.** The approval gate, output redaction, pattern scanners and tool allowlists are in-process heuristics (accident prevention), not containment.
 
 ## Trust model (SECURITY.md)
 
-> Sources: [SECURITY.md](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/SECURITY.md) · [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security)
+> Sources: [SECURITY.md](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/SECURITY.md) · [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security)
 
 - Hermes is described as a single-tenant personal agent. The operator's user account defines the "trust envelope".
 - **Two OS-level isolation postures**: (1) *terminal-backend isolation*, where LLM-emitted shell and the file tools run in a container, remote host or cloud sandbox (confines shell and file-tool actions only; code execution, MCP subprocesses, plugin loading, hook dispatch and skill loading still run in the agent process); and (2) *whole-process wrapping* (the official Docker image/Compose setup, or an external sandbox runtime), which subjects every code path to the same policy. The doc says whole-process wrapping is the supported posture when ingesting content from surfaces the operator does not control, and for production or shared deployments.
@@ -4476,7 +4504,7 @@ The Security page describes a defense-in-depth model with eight layers: user aut
 
 ## Dangerous command approval
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [tools/approval.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/approval.py) · [tools/approval_detection.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/approval_detection.py)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [tools/approval.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/approval.py) · [tools/approval_detection.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/approval_detection.py)
 
 Before executing a terminal command Hermes checks it against curated dangerous patterns. At this SHA the approval code is split: `tools/approval.py` owns the gate flow and per-session state and imports leaf modules (pattern detection in `approval_detection.py`, pre-gate floors in `approval_floors.py`, prompts in `approval_prompt.py`, the smart-mode guardian in `approval_smart.py`, and others). The patterns themselves (`DANGEROUS_PATTERNS`, `HARDLINE_PATTERNS`) are defined in `tools/approval_detection.py`.
 
@@ -4511,7 +4539,7 @@ YOLO bypasses dangerous-command approval prompts. It is enabled with `hermes --y
 
 ### Hardline blocklist and user deny rules
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [tools/approval_detection.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/approval_detection.py)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [tools/approval_detection.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/approval_detection.py)
 
 - **Hardline blocklist**: catastrophic commands (root-level recursive delete, fork bombs, formatting a mounted root device, zeroing a physical disk, piping untrusted URLs to a shell at the filesystem root) are refused regardless of YOLO, `approvals.mode: off`, headless-approve cron, or "allow always". There is no override flag; the docs say the list is non-exhaustive. The docs name `UNRECOVERABLE_BLOCKLIST` in `tools/approval.py`; at this SHA the hardline patterns are defined as `HARDLINE_PATTERNS` in `tools/approval_detection.py`. A command whose shell quoting cannot be parsed fails closed.
 - **`approvals.deny`**: a user-editable list of case-insensitive fnmatch globs that block matching terminal commands unconditionally, before YOLO and `mode: off` are consulted. Matching runs over normalised variants and parses launchers such as `sudo`, `env`, `nohup`, `timeout` and shell `-c` payloads. Always quote patterns in YAML. The docs state this is a shell-command policy, not a complete interpreter or OS sandbox; use OS permissions and an isolated backend for containment.
@@ -4519,7 +4547,7 @@ YOLO bypasses dangerous-command approval prompts. It is enabled with `hermes --y
 
 ### What triggers approval
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [tools/approval_detection.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/approval_detection.py)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [tools/approval_detection.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/approval_detection.py)
 
 The page lists pattern classes rather than a single constant. Grouped:
 
@@ -4551,7 +4579,7 @@ Backends that are themselves the boundary (`docker`, `modal`, `daytona`, `vercel
 
 ## User authorization (gateway)
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [gateway/pairing.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/gateway/pairing.py)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [gateway/pairing.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/gateway/pairing.py)
 
 Authorization check order: per-platform allow-all flag, DM-pairing approved list, platform allowlist (for example `TELEGRAM_ALLOWED_USERS`), global `GATEWAY_ALLOWED_USERS`, global `GATEWAY_ALLOW_ALL_USERS`, then **deny by default**. With no allowlists configured every unauthorised user is denied and the gateway logs a warning.
 
@@ -4561,7 +4589,7 @@ For the slash-command admin/user tier see section 24.
 
 ## Container isolation and terminal backends
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [Docker](https://hermes-agent.nousresearch.com/docs/user-guide/docker) · [tools/environments/docker.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/environments/docker.py)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [Docker](https://hermes-agent.nousresearch.com/docs/user-guide/docker) · [tools/environments/docker.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/environments/docker.py)
 
 The Docker terminal backend applies hardening flags defined in `tools/environments/docker.py`: all capabilities dropped with a minimal re-add set (`DAC_OVERRIDE`, `CHOWN`, `FOWNER`), `no-new-privileges`, a PID limit of 256, and size-limited tmpfs mounts (`/tmp` 512m; `/var/tmp` no-exec, 256m). `SETUID`/`SETGID` are added only when an init/entrypoint must drop privileges. Resource limits are set under `terminal:` (`container_cpu`, `container_memory`, `container_disk`, `container_persistent`).
 
@@ -4575,13 +4603,13 @@ Environment passthrough is explicit opt-in: skills declare `required_environment
 
 ## Egress proxy and network isolation
 
-> Sources: [Egress proxy](https://hermes-agent.nousresearch.com/docs/user-guide/egress/) · [Egress credential-injection proxy](https://hermes-agent.nousresearch.com/docs/user-guide/egress/iron-proxy) · [Network Egress Isolation (Docker)](https://hermes-agent.nousresearch.com/docs/user-guide/egress/network-isolation) · [Egress proxy internals](https://hermes-agent.nousresearch.com/docs/developer-guide/egress-internals) · [agent/proxy_sources/iron_proxy.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/proxy_sources/iron_proxy.py)
+> Sources: [Egress proxy](https://hermes-agent.nousresearch.com/docs/user-guide/egress/) · [Egress credential-injection proxy](https://hermes-agent.nousresearch.com/docs/user-guide/egress/iron-proxy) · [Network Egress Isolation (Docker)](https://hermes-agent.nousresearch.com/docs/user-guide/egress/network-isolation) · [Egress proxy internals](https://hermes-agent.nousresearch.com/docs/developer-guide/egress-internals) · [agent/proxy_sources/iron_proxy.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/proxy_sources/iron_proxy.py)
 
 The optional egress proxy (`hermes egress install | setup | start | status | restart`, config under `proxy:`; `proxy.enabled` is `false` by default) is an outbound credential-injection firewall for the **Docker** terminal sandbox: the sandbox holds opaque proxy tokens, a host-side iron-proxy daemon terminates TLS with a local CA and swaps tokens for real credentials. The docs state it is wired into the Docker backend only (Modal, Daytona, SSH and Singularity do not receive proxy env vars or CA mounts) and that it does not cover the host process's own LLM calls. The internals page lists invariants such as `0700`/`0600` file modes under the proxy state directory, a minimised subprocess environment, default-deny upstream CIDRs (loopback, link-local including cloud metadata, private ranges, CGNAT), and a loopback-only or Docker-bridge bind. The separate network-isolation guide shows a two-network Docker Compose pattern (an `internal` network with no internet and an `egress` network with an allowlisting proxy) as a second layer against exfiltration via `curl`/`wget`. `/egress [status]` reports proxy state in chat.
 
 ## Secrets handling
 
-> Sources: [Secrets](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/) · [Bitwarden Secrets Manager](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/bitwarden) · [1Password](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/onepassword) · [Command helper](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/command) · [Building a Secret Source Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/secret-source-plugin) · [agent/secret_sources/base.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/secret_sources/base.py)
+> Sources: [Secrets](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/) · [Bitwarden Secrets Manager](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/bitwarden) · [1Password](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/onepassword) · [Command helper](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/command) · [Building a Secret Source Plugin](https://hermes-agent.nousresearch.com/docs/developer-guide/secret-source-plugin) · [agent/secret_sources/base.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/secret_sources/base.py)
 
 - Secrets belong in `~/.hermes/.env` (Security page: keep it `chmod 600`); `config.yaml` is for non-secret settings.
 - Hermes can instead pull keys at process startup from external managers: Bitwarden Secrets Manager, 1Password (`op://` references) or a user-configured command helper (`keepassxc-cli`, `pass`, scripts printing `KEY=VALUE`). Precedence per env var: your `.env`/shell wins by default unless a source sets `override_existing: true`; mapped sources beat bulk sources; first source wins. `secrets.preserve_existing` and profile aliasing (`secrets.profile_alias`) make one vault safe across profiles.
@@ -4591,7 +4619,7 @@ The optional egress proxy (`hermes egress install | setup | start | status | res
 
 ## Context file and skill scanning
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [Context Files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files) · [Skills System](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills) · [agent/prompt_builder.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/prompt_builder.py)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [Context Files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files) · [Skills System](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills) · [agent/prompt_builder.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/prompt_builder.py)
 
 - **Context files** (`AGENTS.md`, `.cursorrules`, project files) are scanned for prompt-injection heuristics (ignore-previous-instructions phrasing, hidden HTML comments, secret-reading attempts, curl exfiltration, invisible Unicode). A hit blocks the file with a visible `[BLOCKED: ...]` notice. Your own `SOUL.md` in `HERMES_HOME` is different: a hit logs a warning and `/context` flags it, but the file still loads. A `SOUL.md` owned by an installed profile distribution is still blocked on a hit.
 - **Skills Hub installs** go through a scanner for data exfiltration, prompt injection, destructive commands and supply-chain signals. Trust levels: `builtin` (always trusted), `official` (the repo's `optional-skills/`), `trusted` (named trusted registries) and `community` (everything else). `--force` can override non-dangerous policy blocks but never a `dangerous` verdict. SECURITY.md stresses that Skills Guard is a review aid, not a boundary.
@@ -4614,7 +4642,7 @@ URL-capable tools (web search/extract, vision, browser) validate URLs: private (
 
 ## Network exposure and extension trust
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [API Server](https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server) · [Web Dashboard](https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard) · [SECURITY.md](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/SECURITY.md)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [API Server](https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server) · [Web Dashboard](https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard) · [SECURITY.md](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/SECURITY.md)
 
 - The API server binds to loopback by default (`API_SERVER_HOST`) and uses bearer authentication with `API_SERVER_KEY`. The dashboard defaults to a loopback bind; a non-loopback bind engages its auth gate, and the old `--insecure` flag is a deprecated no-op that no longer disables authentication.
 - Gateway event hooks (`<profile home>/hooks/<name>/`) are "trusted by placement": placing the directory is the opt-in, with no `plugins.enabled` entry or prompt, and they run in-process with gateway privileges. Treat `~/.hermes/hooks/` like `config.yaml`. General plugins need `plugins.enabled`, and shell hooks need first-use approval.
@@ -4627,13 +4655,15 @@ The old guide's sweeping statements ("never use" a specific tunnel product, "the
 
 # 26. File Dependency Chain & Import Order
 
-> Sources: [Architecture](https://hermes-agent.nousresearch.com/docs/developer-guide/architecture) · [Codebase Ownership Map](https://hermes-agent.nousresearch.com/docs/developer-guide/codebase-ownership) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [model_tools.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/model_tools.py)
+> Sources: [Architecture](https://hermes-agent.nousresearch.com/docs/developer-guide/architecture) · [Codebase Ownership Map](https://hermes-agent.nousresearch.com/docs/developer-guide/codebase-ownership) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [model_tools.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/model_tools.py)
 
 The docs do not publish a full import order for the codebase. What they state is a short tool-registration chain, plus a subsystem ownership map. This section reproduces those and records what was checked against source at the SHA.
 
 ## Documented tool-registration chain
 
-> Sources: [Architecture](https://hermes-agent.nousresearch.com/docs/developer-guide/architecture) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/registry.py)
+> Changed 2026-11-08 (upstream `296308546a`): a **moved module is served under its old names as one module object**. `hermes_agent/compat/finder.py` is a `meta_path` finder that maps an old dotted name to its current one by the longest prefix that is a key of the moves table (`hermes_agent/compat/moves.py`), and returns the real module object for it. An old name and its current name therefore **share state**, `mock.patch` through either name reaches the real code, and `reload()` re-executes the real file. Keys are only added; when a target moves again only its value changes. This is the migration path for the internal import paths the Sep 2026 module decomposition removed (see section 20's plugin-API note).
+
+> Sources: [Architecture](https://hermes-agent.nousresearch.com/docs/developer-guide/architecture) · [Tools Runtime](https://hermes-agent.nousresearch.com/docs/developer-guide/tools-runtime) · [tools/registry.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/registry.py)
 
 The architecture page's chain:
 
@@ -4679,7 +4709,7 @@ Conventions from the page: keep changes inside their subsystem, run the mirror t
 
 ## System prompt build order
 
-> Sources: [Prompt Assembly](https://hermes-agent.nousresearch.com/docs/developer-guide/prompt-assembly) · [agent/system_prompt.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/system_prompt.py) · [agent/prompt_builder.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/prompt_builder.py)
+> Sources: [Prompt Assembly](https://hermes-agent.nousresearch.com/docs/developer-guide/prompt-assembly) · [agent/system_prompt.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/system_prompt.py) · [agent/prompt_builder.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/prompt_builder.py)
 
 The prompt-assembly page describes the cached system prompt as three ordered tiers built in `agent/system_prompt.py`, joined stable then context then volatile:
 
@@ -4696,7 +4726,7 @@ This differs from the older chain in this guide, which placed the skills index i
 
 ## Configuration precedence
 
-> Sources: [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [hermes_cli/config.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_cli/config.py)
+> Sources: [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [hermes_cli/config.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_cli/config.py)
 
 The configuration page gives the precedence (highest first): CLI arguments, then `~/.hermes/config.yaml`, then `~/.hermes/.env`, then built-in defaults. Secrets go in `.env`; non-secret settings go in `config.yaml`, which wins when both are set. The older ordering in this guide (environment variables and `.env` overriding `config.yaml`) is not what the page states. An administrator can pin values through a managed-scope directory (see the Managed Scope page); `.env` loading at agent import time goes through `hermes_cli/env_loader.py` (`load_hermes_dotenv`), called from `run_agent.py`.
 
@@ -4704,13 +4734,13 @@ The configuration page gives the precedence (highest first): CLI arguments, then
 
 # 27. Key Constants & Defaults Reference
 
-> Sources: [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [cli-config.yaml.example](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/cli-config.yaml.example) · [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security)
+> Sources: [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [cli-config.yaml.example](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/cli-config.yaml.example) · [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security)
 
-Only values that could be cited to the docs, `cli-config.yaml.example`, or a named source constant at SHA `9f23c4311a4c4837078081db4f3cd8deab23c0fe` are listed. Defaults change between releases; verify on your install with `hermes config` or the Configuration page. Where two upstream sources disagree this is stated in the row. This section deliberately omits several values from the older guide that could not be re-verified or were found changed.
+Only values that could be cited to the docs, `cli-config.yaml.example`, or a named source constant at SHA `acdc8f1ba65c0231ae8277e846a4d55928913991` are listed. Defaults change between releases; verify on your install with `hermes config` or the Configuration page. Where two upstream sources disagree this is stated in the row. This section deliberately omits several values from the older guide that could not be re-verified or were found changed.
 
 ## Agent and loop
 
-> Sources: [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [cli-config.yaml.example](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/cli-config.yaml.example) · [Subagent Delegation](https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation)
+> Sources: [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [cli-config.yaml.example](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/cli-config.yaml.example) · [Subagent Delegation](https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation)
 
 | Setting | Value | Source |
 |---|---|---|
@@ -4722,7 +4752,7 @@ Only values that could be cited to the docs, `cli-config.yaml.example`, or a nam
 
 ## Context compression
 
-> Sources: [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [Context Compression & Caching](https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching) · [agent/context_compressor.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/context_compressor.py)
+> Sources: [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) · [Context Compression & Caching](https://hermes-agent.nousresearch.com/docs/developer-guide/context-compression-and-caching) · [agent/context_compressor.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/context_compressor.py)
 
 | Setting | Value | Source |
 |---|---|---|
@@ -4740,7 +4770,7 @@ Only values that could be cited to the docs, `cli-config.yaml.example`, or a nam
 
 ## Tool output and prompt size limits
 
-> Sources: [Context Files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files) · [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [tools/budget_config.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/budget_config.py) · [agent/prompt_builder.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/agent/prompt_builder.py)
+> Sources: [Context Files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files) · [Persistent Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) · [tools/budget_config.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/budget_config.py) · [agent/prompt_builder.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/agent/prompt_builder.py)
 
 | Constant | Value | Source |
 |---|---|---|
@@ -4754,7 +4784,7 @@ Only values that could be cited to the docs, `cli-config.yaml.example`, or a nam
 
 ## Approvals, pairing and containers
 
-> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [tools/environments/docker.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/tools/environments/docker.py)
+> Sources: [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) · [tools/environments/docker.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/tools/environments/docker.py)
 
 | Setting | Value | Source |
 |---|---|---|
@@ -4772,7 +4802,7 @@ Only values that could be cited to the docs, `cli-config.yaml.example`, or a nam
 
 ## Cron
 
-> Sources: [Scheduled Tasks (Cron)](https://hermes-agent.nousresearch.com/docs/user-guide/features/cron) · [Cron Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals) · [cron/scheduler.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/cron/scheduler.py)
+> Sources: [Scheduled Tasks (Cron)](https://hermes-agent.nousresearch.com/docs/user-guide/features/cron) · [Cron Internals](https://hermes-agent.nousresearch.com/docs/developer-guide/cron-internals) · [cron/scheduler.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/cron/scheduler.py)
 
 | Setting | Value | Source |
 |---|---|---|
@@ -4783,7 +4813,7 @@ Only values that could be cited to the docs, `cli-config.yaml.example`, or a nam
 
 ## Session database write contention
 
-> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/9f23c4311a4c4837078081db4f3cd8deab23c0fe/hermes_state.py)
+> Sources: [Session Storage](https://hermes-agent.nousresearch.com/docs/developer-guide/session-storage) · [hermes_state.py](https://github.com/NousResearch/hermes-agent/blob/acdc8f1ba65c0231ae8277e846a4d55928913991/hermes_state.py)
 
 The session-database code is split across `hermes_state.py` and many `hermes_state_*.py` modules at this SHA. Constants seen in `hermes_state.py` (class attributes): `_WRITE_RETRY_MIN_S` 0.020 and `_WRITE_RETRY_MAX_S` 0.150 (fast jitter), a slow phase after `_WRITE_RETRY_SLOW_AFTER_S` = 2.0 s with 0.250 to 1.000 s jitter, and a WAL checkpoint every `_CHECKPOINT_EVERY_N_WRITES` = 50 writes. The older guide's retry count of 15 and 1-second timeout were not re-verified and are omitted.
 

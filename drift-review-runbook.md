@@ -33,14 +33,14 @@ If `PRIOR` is the same as `origin/main`, drift is zero — no changelog needed (
 
 ### 1b. Body-provenance probe (MANDATORY — added 2026-11-01)
 
-**The anchor in `repo_commit` is a REVIEW anchor, not a BODY-sync anchor.** They are different dates and drift apart. Reporting "the reference is N days stale" from the review anchor understates the SSOT body's real age — this caused two consecutive passes (2026-10-18 and 2026-10-25 [dates corrected 2026-11-06; the files were originally misnamed 2026-11-10 and 2026-11-24]) to report a stale reference that was actually ~2 months older than claimed.
+**The anchor in `repo_commit` is a REVIEW anchor, not a BODY-sync anchor.** They are different dates and drift apart. Reporting "the reference is N days stale" from the review anchor understates the SSOT body's real age — this caused two consecutive passes (2026-11-10 and 2026-11-24) to report a stale reference that was actually ~2 months older than claimed.
 
 Read the body's own provenance header, and report staleness from **that** date:
 
 ```bash
 # The SSOT body's own last-sync date (authoritative for "how stale is the reference?")
 grep -E '^### (Compiled|Updated):' \
-  <skill-dir>/Hermes_Architecture.md
+  <skill-dir>/references/Hermes_Architecture.md
 
 # Commits between the body's last sync and upstream HEAD
 BODY_SYNC=$(git -C ~/.hermes/hermes-agent log --format='%H' origin/main \
@@ -74,7 +74,7 @@ Grep the SSOT body for the constants it claims and diff them against upstream:
 
 ```bash
 grep -nE 'SCHEMA_VERSION|FTS_STORAGE_VERSION|schema_version' \
-  <skill-dir>/Hermes_Architecture.md
+  <skill-dir>/references/Hermes_Architecture.md
 ```
 
 A body that names no version number is not wrong — but a changelog that *claims* a version must match the constant, not the commit messages.
@@ -178,7 +178,7 @@ repo_commit: <prior_anchor> (last fully-synced anchor; upstream now <head>, +<n>
 Then under `## Targeted quirks`, add a pointer to the new changelog with the canonical warning:
 
 ```
-- [CHANGELOG-<YYYY-MM-DD>.md](CHANGELOG-<YYYY-MM-DD>.md) — <one-line summary of the window>. **Read this before assuming any section of the main reference is current.**
+- `references/CHANGELOG-<YYYY-MM-DD>.md` — <one-line summary of the window>. **Read this before assuming any section of the main reference is current.**
 ```
 
 If a `Reverts` section is non-empty in the changelog, also bump the skill description's trigger list if a reverted feature was in it.
@@ -187,8 +187,8 @@ If a `Reverts` section is non-empty in the changelog, also bump the skill descri
 
 ```bash
 # Confirm the changelog is readable and self-references correctly
-ls -la <skill-dir>/CHANGELOG-<YYYY-MM-DD>.md
-head -20 <skill-dir>/CHANGELOG-<YYYY-MM-DD>.md
+ls -la <skill-dir>/references/CHANGELOG-<YYYY-MM-DD>.md
+head -20 <skill-dir>/references/CHANGELOG-<YYYY-MM-DD>.md
 
 # Confirm the SKILL.md is well-formed (no broken frontmatter)
 python3 -c "import re; print(re.match(r'^---\n.*?\n---', open('<skill-dir>/SKILL.md').read()).group())"
@@ -197,11 +197,42 @@ python3 -c "import re; print(re.match(r'^---\n.*?\n---', open('<skill-dir>/SKILL
 hermes skills list | grep hermes-architecture-reference
 ```
 
-## 8. Public mirror sync (when the operator authorizes)
+## 8. Public mirror sync (when operator authorizes)
 
-**The mirror stores files FLAT AT THE REPO ROOT** — `CHANGELOG-<date>.md`, `Hermes_Architecture.md`, `SKILL.md` — *not* under any subdirectory. Copying into a subdirectory lands the file in a path that does not exist in the mirror. This is the single most-repeated mistake in past passes.
+**The mirror stores files FLAT AT THE REPO ROOT** — `CHANGELOG-<date>.md`, `Hermes_Architecture.md`, `SKILL.md` — *not* under a `references/` subdirectory. Copying into `references/` lands the file in a directory that does not exist in the mirror. This is the single most-repeated mistake in past passes.
 
-Use a single canonical clone of the mirror (`<mirror-clone>`). If you also find a second, stale clone with uncommitted edits or untracked files, do not reuse it; re-clone rather than building on stale state.
+### 8a. The mirror is the TRIGGER, not the source — always diff BOTH ways (added 2026-11-08)
+
+**The 2026-11-06 rebuild landed in the public mirror and never reached the local skill.** The local `references/Hermes_Architecture.md` was still the 2026-06-21 body (116,827 bytes) while the mirror had been rebuilt to 526,847 bytes — a ~140-day staleness that two weekly passes missed because both measured staleness against the *review anchor* rather than comparing the two copies byte-for-byte.
+
+**Rule: before writing anything, diff the local skill against the mirror in BOTH directions.** A pass that only pushes local→mirror will happily push a stale body over a newer one, and a pass that only pulls mirror→local will miss its own gaps.
+
+```bash
+# LOCAL -> MIRROR: what the mirror is missing (files + sizes)
+diff <(ls -la <skill-dir>/references/) \
+     <(ls -la <mirror-clone>/)
+
+# MIRROR -> LOCAL: what the LOCAL skill is missing — the direction that was missed
+diff <(ls <mirror-clone>/) \
+     <(ls <skill-dir>/references/)
+
+# Byte-level check on the main reference (the file that matters most)
+wc -c <mirror-clone>/Hermes_Architecture.md \
+      <skill-dir>/references/Hermes_Architecture.md
+```
+
+**Also check the mirror's git log for a rebuild commit.** A commit titled "rebuild" / "sanitize" / "regenerate" in the mirror means the local skill is probably behind it:
+
+```bash
+gh api repos/<owner>/<repo>/commits \
+  --jq '.[] | "\(.sha[0:9]) \(.commit.author.date) \(.commit.message | split("\n")[0])"' | head -15
+```
+
+**Which copy wins:** the **local** skill is the SSOT for this machine (it carries ss-specific paths in the operational notes that are correct here). The mirror is distribution for other agents and is deliberately generic/sanitized. When they disagree, reconcile **by content and provenance**, not by blind copy: the local copy keeps its `references/` layout and machine-correct paths; the mirror keeps its flat layout and generic wording. Both carry the same anchor facts.
+
+### 8b. Layout and clone notes
+
+Canonical clone (verified 2026-11-01): `<mirror-clone>`. There is a **second, stale clone** at `<stale-clone>` (last touched Sep 20, holds an uncommitted SKILL.md edit and an untracked 2026-09-20 changelog). Use the `src/` one; if `src/` is missing, re-clone rather than reusing the stale one.
 
 ```bash
 cd <mirror-clone>
@@ -212,8 +243,8 @@ git log --oneline HEAD..origin/main          # commits on remote we lack
 git log --oneline origin/main..HEAD          # commits we lack on remote
 git merge origin/main                        # 0 conflicts in practice; resolve if not
 
-# Copy the new changelog to the repo ROOT (flat layout), not a subdirectory
-cp <skill-dir>/CHANGELOG-<YYYY-MM-DD>.md .
+# Copy the new changelog to the repo ROOT (flat layout), not references/
+cp <skill-dir>/references/CHANGELOG-<YYYY-MM-DD>.md .
 
 # Also sync SKILL.md when the frontmatter or the Targeted-quirks list changed
 cp <skill-dir>/SKILL.md .
@@ -223,15 +254,33 @@ git commit -m "Weekly drift sync: <YYYY-MM-DD> upstream changes"
 git push origin main
 ```
 
-**Backfill gaps.** The mirror is frequently *behind* the local skill by more than one pass — earlier changelogs and whole reference files (e.g. the 2026-10-14 and 2026-10-18 changelogs, `approvals-mode-quirks.md`, `citation-verification.md`, `config-migration-and-provider-routing.md`, `drift-review-runbook.md`) were never pushed. After the new-file push, diff the file lists and copy anything missing (the local skill directory may itself be nested differently; compare file names only):
+**Backfill gaps.** The mirror is frequently *behind* the local skill by more than one pass — earlier changelogs and whole reference files (e.g. the 2026-10-14 and 2026-11-10 changelogs, `approvals-mode-quirks.md`, `citation-verification.md`, `config-migration-and-provider-routing.md`, `drift-review-runbook.md`) were never pushed. After the new-file push, diff the file lists and copy anything missing:
 
 ```bash
 # Files in the local skill that are absent from the mirror
-diff <(ls <skill-dir>/) \
+diff <(ls <skill-dir>/references/) \
      <(ls <mirror-clone>/)
 ```
 
 Push the backfilled files too. A mirror that is missing reference files is worse than one that is merely a week stale — other agents pull from it.
+
+### 8c. Link style differs between the two layouts
+
+The local skill uses `references/...` relative links (required by Hermes' `skill_view` linked-files resolver, which only descends into `references/`, `templates/`, `assets/`, `scripts/`). The mirror uses flat `./File.md` links because its files sit at the repo root.
+
+**Do not blanket-copy a file between the two layouts.** Either rewrite the links on copy, or keep each layout's own copy. A local file with flat `./File.md` links will not resolve inside the skill, and a mirror file with `references/...` links will 404 on GitHub.
+
+### 8d. Source-link SHA re-pinning must be SECTION-SCOPED (added 2026-11-08)
+
+A rebuilt reference pins every source link to the commit it was verified against (e.g. `blob/<sha>/file.py`). When a later pass re-verifies only *some* sections, **do not re-pin the whole document** — that would claim the new commit verified claims you never checked.
+
+```python
+# Re-pin only the sections you actually re-verified, by section number.
+REVERIFIED = {13, 15, 18, 20, 21, 22, 25, 26, 27}
+```
+
+Split the document on `^# (\d+)\. ` headings, replace the old SHA only inside the re-verified sections, and leave every other section on its original anchor. State the rule in the document header so a reader knows why two anchors appear: *"Source links name the commit each claim was verified against."*
+
 
 **Verify the push landed** (never assume):
 
@@ -248,10 +297,10 @@ Skip this step if the operator hasn't authorized the public mirror — it's a di
 |---|---|---|
 | `git fetch origin main` fails with "could not resolve host" | Network blip or VPN off | Retry once; if still failing, document in changelog "Known limitations" and proceed with last-fetched origin/main |
 | `git rev-parse origin/main` returns nothing | `git fetch` was never run in this shell | Run `git fetch origin main` first; never assume the prior session's fetch state |
-| Local is on a feature branch (`fix/cron-update-pin-snapshots`) | Install uses long-lived working branches | Don't merge to main — just use the branch's HEAD as the local anchor. The drift count is `<branch_HEAD>..origin/main` |
+| Local is on a feature branch (`fix/cron-update-pin-snapshots`) | Profile uses long-lived working branches | Don't merge to main — just use the branch's HEAD as the local anchor. The drift count is `<branch_HEAD>..origin/main` |
 | `hermes --version` returns a different commit than the git HEAD | Hermes is installed from a pip wheel, not a checkout | Use `pip show hermes-agent \| grep Location` to find the install path; the install path's `__init__.py` has the version constant. Or just trust `hermes --version`. |
 | `last_drift_review` already updated today | Two cron runs in one day (timezone / DST) | OK — second run is a no-op as long as the changelog filename is unique. Never overwrite the prior file. |
 | Changelog filename is dated a month *after* the window it describes | The pass named the file from a stale "next scheduled run" date instead of the actual run date | Name the file for the **actual run date**. Verify with `date` at the start of the pass, and record the window's upstream anchor commit date in the changelog header so the chain can be ordered by anchor, not filename. (Two passes did this on 2026-10-18 and 2026-10-25.) |
 | Changelog claims "no schema bump" but upstream moved | The bump commit's message doesn't mention "schema", so a message grep misses it | Read the constant directly — `git show origin/main:hermes_state_common.py \| grep -E '^(SCHEMA\|FTS_STORAGE_VERSION) = '`. Never infer a version from commit messages. (Two passes reported "v31 unchanged" while upstream was v32.) |
 | Reported staleness is ~2 months shorter than reality | Staleness measured from the `repo_commit` review anchor instead of the body's own last-sync date | Run the body-provenance probe (§1b) and report body age and review-anchor age separately. |
-| Mirror push "succeeded" but the file isn't on GitHub | File was copied into a subdirectory (which doesn't exist in the mirror) instead of the repo root | Mirror layout is FLAT. Copy to `.`, then verify with `git ls-tree -r --name-only origin/main`. |
+| Mirror push "succeeded" but the file isn't on GitHub | File was copied into `references/` (a dir that doesn't exist in the mirror) instead of the repo root | Mirror layout is FLAT. Copy to `.`, then verify with `git ls-tree -r --name-only origin/main`. |

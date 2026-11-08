@@ -14,12 +14,15 @@ This repository contains Markdown only. There is no runtime code to install or r
 
 | Item | Value |
 |---|---|
-| Last synced | 2026-11-06 |
+| Last synced | 2026-11-08 |
 | Upstream repository | NousResearch/hermes-agent, `main` |
-| Upstream commit | `9f23c4311a4c4837078081db4f3cd8deab23c0fe` ([tree at that commit](https://github.com/NousResearch/hermes-agent/tree/9f23c4311a4c4837078081db4f3cd8deab23c0fe)) |
+| Upstream commit | `acdc8f1ba65c0231ae8277e846a4d55928913991` ([tree at that commit](https://github.com/NousResearch/hermes-agent/tree/acdc8f1ba65c0231ae8277e846a4d55928913991)) |
+| Full-rebuild anchor | `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (the main reference was rebuilt against this commit on 2026-11-06 and delta-applied to the commit above on 2026-11-08) |
 | Latest release at sync | [v0.23.0, "The Hearth Release"](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0), published 2026-11-05 |
 
 The same anchor is recorded in the `repo_commit` and `last_drift_review` fields of [SKILL.md](./SKILL.md). Nothing in this repository was verified by running Hermes Agent; checks were made by reading the official docs and the upstream source at the commit above.
+
+Source links inside [Hermes_Architecture.md](./Hermes_Architecture.md) name the commit each claim was verified against. Sections re-verified on 2026-11-08 point at the 2026-11-08 anchor; the rest point at the 2026-11-06 rebuild anchor.
 
 ## Where to start
 
@@ -37,7 +40,8 @@ Suggested order: skim SKILL.md, look up the topic in Hermes_Architecture.md, the
 
 Changelogs are **historical snapshots**: each records what one review pass observed on its own date. They are an audit trail and a source of commit SHAs, not a description of current behavior. Numbers inside them (commit counts, schema versions, "behind upstream", staleness) are valid only for that date. Use Hermes_Architecture.md and the official sources for current facts.
 
-- [CHANGELOG-2026-11-06.md](./CHANGELOG-2026-11-06.md) (rebuild of the reference at the sync above)
+- [CHANGELOG-2026-11-08.md](./CHANGELOG-2026-11-08.md) (delta pass at the sync above)
+- [CHANGELOG-2026-11-06.md](./CHANGELOG-2026-11-06.md) (rebuild of the reference at the 2026-11-06 anchor)
 - [CHANGELOG-2026-11-01.md](./CHANGELOG-2026-11-01.md)
 - [CHANGELOG-2026-10-25.md](./CHANGELOG-2026-10-25.md) (renamed, see note)
 - [CHANGELOG-2026-10-18.md](./CHANGELOG-2026-10-18.md) (renamed, see note)

@@ -1,9 +1,9 @@
 ---
 name: hermes-architecture-reference
 description: Use when troubleshooting, designing, implementing, optimizing, maintaining, or reviewing Hermes Agent architecture, internals, config, tools, profiles, memory, MCP, gateway, cron, plugins, skills, provider routing, context compression, or security behavior. Treat official Hermes docs and the NousResearch/hermes-agent repo as authoritative sources; this skill is an offline architecture reference that must be kept in sync.
-version: 2.0.0
-last_drift_review: 2026-11-06
-repo_commit: 9f23c4311a4c4837078081db4f3cd8deab23c0fe
+version: 2.1.0
+last_drift_review: 2026-11-08
+repo_commit: acdc8f1ba65c0231ae8277e846a4d55928913991
 author: Hermes Architecture Reference maintainers
 license: MIT
 metadata:
@@ -23,7 +23,7 @@ Authoritative sources:
 1. Official documentation: <https://hermes-agent.nousresearch.com/docs/>
 2. Official repository: <https://github.com/NousResearch/hermes-agent>
 
-The main reference ([Hermes_Architecture.md](./Hermes_Architecture.md)) was rebuilt on 2026-11-06 from those two sources, anchored to upstream commit `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (latest release at that time: [v0.23.0](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0), published 2026-11-05). **Live docs and the live repository win if they differ.** Community sources (upstream issues and PRs, HermesHub at <https://hermeshub.com>) are secondary: they may be cited for context but must be labelled as community/secondary, never presented as official behavior. See [README.md](./README.md) for the repository overview.
+The main reference ([Hermes_Architecture.md](./Hermes_Architecture.md)) was rebuilt on 2026-11-06 from those two sources, anchored to upstream commit `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (latest release at that time: [v0.23.0](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0), published 2026-11-05), and delta-applied on 2026-11-08 for the 938 commits up to `acdc8f1ba65c0231ae8277e846a4d55928913991`. **Live docs and the live repository win if they differ.** Community sources (upstream issues and PRs, HermesHub at <https://hermeshub.com>) are secondary: they may be cited for context but must be labelled as community/secondary, never presented as official behavior. See [README.md](./README.md) for the repository overview.
 
 ## Required usage rule
 
@@ -50,7 +50,8 @@ Use targeted reads/searches instead of loading the full file into the chat when 
 All files live in the repository root (flat layout).
 
 - [README.md](./README.md) — repository purpose, reading order, update cadence, contribution and privacy rules, source authority.
-- [drift-review-runbook.md](./drift-review-runbook.md) — mechanical execution details for the periodic drift review: anchor probes, commit-type concentration, feat-only inventory, architecture area buckets, spot-verification commands, frontmatter bump recipe.
+- [drift-review-runbook.md](./drift-review-runbook.md) — mechanical execution details for the periodic drift review: anchor probes, commit-type concentration, feat-only inventory, architecture area buckets, spot-verification commands, frontmatter bump recipe, **bidirectional mirror diffing (the mirror can be ahead of the local skill)**, and **section-scoped source-link re-pinning**.
+- [context-engine-plugins.md](./context-engine-plugins.md) — read before recommending or executing any `context.engine` change (built-in compressor vs a plugin engine, or a plugin-generation upgrade): the research procedure, loader traps, profile-scoped installs, the YAML allowlist vs `LCM_*` env surface, and threshold selection.
 - [approvals-mode-quirks.md](./approvals-mode-quirks.md) — `approvals.mode: off` write/repair playbook (covers `hermes config set` YAML 1.1 coercion, `config get` behavior, `config show` not displaying `approvals:`, and file-tool guards that block direct writes; verified 2026-06-28, so re-check against current docs).
 - [citation-verification.md](./citation-verification.md) — protocol for verifying user-supplied or shared procedures and docstrings before executing them.
 - [config-migration-and-provider-routing.md](./config-migration-and-provider-routing.md) — provider migration playbook: structured (non-`sed`) edits, `model.provider` / `model.default` namespace-collision pitfall, live OpenRouter slug validation, stale-provider purge, worker-profile creation, routing-role vs runnable-profile distinction, and a pre-completion verification checklist.
@@ -59,6 +60,7 @@ All files live in the repository root (flat layout).
 
 Each dated changelog below is a **historical snapshot** of one drift-review pass. It records what the reviewer observed against the upstream head of that day. It is not current truth, and any staleness or "commits behind" figure inside it describes that day only. Use the changelogs for provenance and for finding the commit SHAs behind a change; use [Hermes_Architecture.md](./Hermes_Architecture.md), the official docs, and the upstream repo for current behavior. The 2026-11-06 entry describes the rebuild that produced the current reference.
 
+- [CHANGELOG-2026-11-08.md](./CHANGELOG-2026-11-08.md) — delta pass (938 commits since the 2026-11-06 rebuild anchor): session-storage schema v32 to v33 (data-only migration re-tagging delegate subagent rows), CJK FTS5 tokenizer removed from core, two new state modules, gateway `session.transcript` unified as the one stored-transcript read, new public `resolve-profile` control verb, `redact_sensitive_text` promoted to public plugin API, `previous_message` memory-provider input, real-profile `browser:` vault login source, moved-module compatibility finder, and `hermes clipboard image --json`.
 - [CHANGELOG-2026-11-06.md](./CHANGELOG-2026-11-06.md) — rebuild of the main reference against official docs and upstream `9f23c4311a4c4837078081db4f3cd8deab23c0fe` (v0.23.0), privacy scrub, changelog date corrections, new README.
 - [CHANGELOG-2026-11-01.md](./CHANGELOG-2026-11-01.md) — snapshot: remote config plane (`HERMES_CONFIG_BACKEND=remote` and the `ConfigBackend` seam), GitHub Copilot moved out of core into a labs plugin, `hermes cron cancel`, `sessions recover`, `webapp`, `hooks`, `pre_llm_call` able to block a turn, `/model reset`, `compression.prepare_ahead`, per-job cron timezone and missed-run policy; corrects `SCHEMA_VERSION` figures in earlier snapshots.
 - [CHANGELOG-2026-10-25.md](./CHANGELOG-2026-10-25.md) — snapshot (originally filed under a mis-dated name, corrected 2026-11-06): gateway hardening, webapp server from the gateway, desktop plugin SDK expansion, vault OS-keychain opt-in, plugin catalog growth. Its schema-version statement was corrected by the 2026-11-01 snapshot.
@@ -185,6 +187,8 @@ Locate the checkout before running repo commands; its path differs between machi
 - **Local Hermes can be behind upstream.** Probe `git rev-list --count HEAD..origin/main` at the top of a review. The drift count that matters is `<prior_anchor>..<upstream>`, not `<local>..<upstream>`.
 - **Spot-verify before quoting.** Never put a commit's claims into a changelog without running `git show --stat <sha>` first. Commit messages can mislead (reverts, salvage merges, follow-up fixes).
 - **Changelogs are snapshots.** Any figure in an archived changelog (commit counts, schema numbers, "N commits behind", staleness) is true only for its own date. Re-derive current figures from the docs and upstream source.
+- **Diff the mirror and the local skill in BOTH directions.** A rebuild can land in one copy and never reach the other; a pass that only pushes local-to-mirror will overwrite a newer body with a stale one. Compare the two copies byte-for-byte before writing anything, and check the mirror's commit log for a rebuild commit. See [drift-review-runbook.md](./drift-review-runbook.md) §8a.
+- **Re-pin source links only for the sections you re-verified.** A rebuilt reference pins every source link to the commit it was checked against; moving them all to a newer commit claims verification you did not do.
 - **Never date a changelog after the day it was written.** Dates are part of the audit trail.
 
 ### Config-migration workflow pitfalls
